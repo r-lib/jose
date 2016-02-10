@@ -1,0 +1,19 @@
+Package: jose
+Type: Package
+Title: Javascript Object Signing and Encryption
+Version: 0.1
+Author: Jeroen Ooms
+Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
+Description: A collection of specifications to securely transfer claims such as
+    authorization information between parties. A JSON Web Token (JWT) contains
+    claims used by systems to apply access control rules to its resources. One
+    potential use case of the JWT is authentication and authorization for a
+    system that exposes resources through OAuth 2.0.
+License: MIT + file LICENSE
+URL: https://datatracker.ietf.org/wg/jose/documents/
+    https://github.com/jeroenooms/jose
+BugReports: https://github.com/jeroenooms/jose/issues
+Imports:
+    jsonlite,
+    openssl (>= 0.8)
+RoxygenNote: 5.0.1
