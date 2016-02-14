@@ -1,16 +1,57 @@
-jwt_encode_hs256 <- function(payload = list(), secret = "secret") {
-  header <- '{"alg":"HS256", "typ":"JWT"}'
-  body <- jsonlite::toJSON(payload, auto_unbox = TRUE)
+#' JSON Web Token
+#'
+#' Sign or verify a JSON web token
+#'
+#' @export
+#' @rdname jwt_encode
+#' @examples # HMAC signing
+#' mysecret <- "This is super secret"
+#' token <- list(name = "jeroen", session = 123456)
+#' jwt_encode_hmac(token, mysecret)
+#'
+#' # RSA encoding
+#' mykey <- openssl::rsa_keygen()
+#' jwt_encode_rsa(token, mykey)
+#'
+#' # Same with EC
+#' mykey <- openssl::ec_keygen()
+#' jwt_encode_ec(token, mykey)
+jwt_encode_hmac <- function(payload = list(), secret = "secret", size = 256) {
+  header <- to_json(list(
+    typ = "JWT",
+    alg = paste0("HS", size)
+  ))
+  body <- to_json(payload)
   doc <- paste(base64url_encode(header), base64url_encode(body), sep = ".")
-  sig <- sha256(charToRaw(doc), key = secret)
+  sig <- sha2(charToRaw(doc), size = size, key = secret)
   paste(doc, base64url_encode(sig), sep = ".")
 }
 
-jwt_encode_rs256 <- function(payload = list(), key = openssl::my_key()) {
-  header <- '{"alg":"RS256", "typ":"JWT"}'
-  body <- jsonlite::toJSON(payload, auto_unbox = TRUE)
+#' @export
+#' @rdname jwt_encode
+jwt_encode_rsa <- function(payload = list(), key, size = 256) {
+  header <- to_json(list(
+    typ = "JWT",
+    alg = paste0("RS", size)
+  ))
+  stopifnot(inherits(key, "rsa"))
+  body <- to_json(payload)
   doc <- paste(base64url_encode(header), base64url_encode(body), sep = ".")
-  sig <- signature_create(charToRaw(doc), sha256, key = key)
+  sig <- signature_create(charToRaw(doc), function(x){sha2(x, size = size)}, key = key)
+  paste(doc, base64url_encode(sig), sep = ".")
+}
+
+#' @export
+#' @rdname jwt_encode
+jwt_encode_ec <- function(payload = list(), key = openssl::my_key(), size = 256) {
+  header <- to_json(list(
+    typ = "JWT",
+    alg = paste0("ES", size)
+  ))
+  stopifnot(inherits(key, "ecdsa"))
+  body <- to_json(payload)
+  doc <- paste(base64url_encode(header), base64url_encode(body), sep = ".")
+  sig <- signature_create(charToRaw(doc), function(x){sha2(x, size = size)}, key = key)
   paste(doc, base64url_encode(sig), sep = ".")
 }
 
@@ -50,6 +91,10 @@ jwt_decode_rs256 <- function(jwt, pubkey){
 
   # Return payload
   jsonlite::fromJSON(rawToChar(base64url_decode(input[2])))
+}
+
+to_json <- function(x){
+  jsonlite::toJSON(x, auto_unbox = TRUE)
 }
 
 

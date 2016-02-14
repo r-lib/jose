@@ -2,5 +2,8 @@
 
 export(base64url_decode)
 export(base64url_encode)
+export(jwt_encode_ec)
+export(jwt_encode_hmac)
+export(jwt_encode_rsa)
 importFrom(openssl,base64_decode)
 importFrom(openssl,base64_encode)
