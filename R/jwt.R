@@ -69,6 +69,8 @@ jwt_encode_ec <- function(payload = list(), key, size = 256) {
 #' @export
 #' @rdname jwt_encode
 jwt_decode_hmac <- function(jwt, secret){
+  if(!is.character(secret) && !is.raw(secret))
+    stop("Secret must be a string or raw vector")
   out <- jwt_split(jwt)
   if(out$type != "HMAC")
     stop("Invalid algorithm: ", out$type)
