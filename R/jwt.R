@@ -66,6 +66,8 @@ jwt_encode_rsa <- function(payload = list(), key, size = 256) {
   key <- read_key(key)
   if(!inherits(key, "rsa") || !inherits(key, "key"))
     stop("key must be rsa private key")
+  if(as.list(key)$size < 2048)
+    stop("RSA keysize must be at least 2048 bit")
   header <- to_json(list(
     typ = "JWT",
     alg = paste0("RS", size)
