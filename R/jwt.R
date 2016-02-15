@@ -2,10 +2,12 @@
 #'
 #' Sign or verify a JSON web token. The \code{jwt_encode_hmac}, \code{jwt_encode_rsa},
 #' and \code{jwt_encode_ec} default to \code{HS256}, \code{RS256}, and \code{ES256}
-#' respectively.
+#' respectively. See \href{https://jwt.io}{jwt.io} or
+#' \href{https://tools.ietf.org/html/rfc7519}{RFC7519} for more details.
 #'
 #' @export
 #' @rdname jwt_encode
+#' @aliases jwt jose
 #' @param payload a named list with the fields to encode
 #' @param secret string or raw vector with a secret passphrase
 #' @param size bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
@@ -91,10 +93,13 @@ jwt_decode_rsa <- function(jwt, pubkey){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_ec <- function(payload = list(), key, size = 256) {
+jwt_encode_ec <- function(payload = list(), key) {
   key <- read_key(key)
   if(!inherits(key, "ecdsa") || !inherits(key, "key"))
     stop("key must be ecdsa private key")
+  # See http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3.4
+  size <- switch(as.list(key)$data$curve,
+    "P-256" = 256, "P-384" = 384, "P-521" = 512, stop("invalid curve"))
   header <- to_json(list(
     typ = "JWT",
     alg = paste0("ES", size)

@@ -32,15 +32,19 @@ test_that("RSA sizes", {
 })
 
 test_that("EC sizes", {
-  key <- openssl::ec_keygen()
-  pubkey <- as.list(key)$pubkey
-  sig <- jwt_encode_ec(test, key)
-  sig256 <- jwt_encode_ec(test, key, size = 256)
-  sig384 <- jwt_encode_ec(test, key, size = 384)
-  sig512 <- jwt_encode_ec(test, key, size = 512)
-  expect_equal(test, jwt_decode_ec(sig, pubkey))
-  expect_equal(test, jwt_decode_ec(sig256, pubkey))
-  expect_equal(test, jwt_decode_ec(sig384, pubkey))
-  expect_equal(test, jwt_decode_ec(sig512, pubkey))
+  key256 <- openssl::ec_keygen("P-256")
+  key384 <- openssl::ec_keygen("P-384")
+  key521 <- openssl::ec_keygen("P-521")
+  pubkey256 <- as.list(key256)$pubkey
+  pubkey384 <- as.list(key384)$pubkey
+  pubkey521 <- as.list(key521)$pubkey
+  sig <- jwt_encode_ec(test, key256)
+  sig256 <- jwt_encode_ec(test, key256)
+  sig384 <- jwt_encode_ec(test, key384)
+  sig512 <- jwt_encode_ec(test, key521)
+  expect_equal(test, jwt_decode_ec(sig, pubkey256))
+  expect_equal(test, jwt_decode_ec(sig256, pubkey256))
+  expect_equal(test, jwt_decode_ec(sig384, pubkey384))
+  expect_equal(test, jwt_decode_ec(sig512, pubkey521))
 })
 
