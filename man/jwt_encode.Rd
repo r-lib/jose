@@ -11,13 +11,13 @@
 \usage{
 jwt_encode_hmac(payload = list(), secret, size = 256)
 
-jwt_encode_rsa(payload = list(), key, size = 256)
-
-jwt_encode_ec(payload = list(), key, size = 256)
-
 jwt_decode_hmac(jwt, secret)
 
+jwt_encode_rsa(payload = list(), key, size = 256)
+
 jwt_decode_rsa(jwt, pubkey)
+
+jwt_encode_ec(payload = list(), key, size = 256)
 
 jwt_decode_ec(jwt, pubkey)
 }
@@ -33,14 +33,14 @@ jwt_decode_hmac(sig, mysecret)
 
 # RSA encoding
 mykey <- openssl::rsa_keygen()
-mypk <- as.list(mykey)$pubkey
+pubkey <- as.list(mykey)$pubkey
 sig <- jwt_encode_rsa(token, mykey)
-jwt_decode_rsa(sig, mypk)
+jwt_decode_rsa(sig, pubkey)
 
 # Same with EC
 mykey <- openssl::ec_keygen()
-mypk <- as.list(mykey)$pubkey
+pubkey <- as.list(mykey)$pubkey
 sig <- jwt_encode_ec(token, mykey)
-jwt_decode_ec(sig, mypk)
+jwt_decode_ec(sig, pubkey)
 }
 

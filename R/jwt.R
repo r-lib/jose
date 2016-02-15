@@ -4,7 +4,7 @@
 #'
 #' @export
 #' @rdname jwt_encode
-#' @importFrom openssl sha2 signature_verify read_pubkey read_key
+#' @importFrom openssl sha2 signature_create signature_verify read_pubkey read_key
 #' @importFrom jsonlite fromJSON toJSON
 #' @examples # HMAC signing
 #' mysecret <- "This is super secret"
@@ -14,15 +14,15 @@
 #'
 #' # RSA encoding
 #' mykey <- openssl::rsa_keygen()
-#' mypk <- as.list(mykey)$pubkey
+#' pubkey <- as.list(mykey)$pubkey
 #' sig <- jwt_encode_rsa(token, mykey)
-#' jwt_decode_rsa(sig, mypk)
+#' jwt_decode_rsa(sig, pubkey)
 #'
 #' # Same with EC
 #' mykey <- openssl::ec_keygen()
-#' mypk <- as.list(mykey)$pubkey
+#' pubkey <- as.list(mykey)$pubkey
 #' sig <- jwt_encode_ec(token, mykey)
-#' jwt_decode_ec(sig, mypk)
+#' jwt_decode_ec(sig, pubkey)
 jwt_encode_hmac <- function(payload = list(), secret, size = 256) {
   if(!is.character(secret) && !is.raw(secret))
     stop("Secret must be a string or raw vector")
@@ -33,36 +33,6 @@ jwt_encode_hmac <- function(payload = list(), secret, size = 256) {
   body <- to_json(payload)
   doc <- paste(base64url_encode(header), base64url_encode(body), sep = ".")
   sig <- sha2(charToRaw(doc), size = size, key = secret)
-  paste(doc, base64url_encode(sig), sep = ".")
-}
-
-#' @export
-#' @rdname jwt_encode
-jwt_encode_rsa <- function(payload = list(), key, size = 256) {
-  key <- read_key(key)
-  if(!inherits(key, "rsa") || !inherits(key, "key"))
-    stop("key must be rsa private key")
-  header <- to_json(list(
-    typ = "JWT",
-    alg = paste0("RS", size)
-  ))
-  doc <- paste(base64url_encode(header), base64url_encode(to_json(payload)), sep = ".")
-  sig <- signature_create(charToRaw(doc), function(x){sha2(x, size = size)}, key = key)
-  paste(doc, base64url_encode(sig), sep = ".")
-}
-
-#' @export
-#' @rdname jwt_encode
-jwt_encode_ec <- function(payload = list(), key, size = 256) {
-  key <- read_key(key)
-  if(!inherits(key, "ecdsa") || !inherits(key, "key"))
-    stop("key must be ecdsa private key")
-  header <- to_json(list(
-    typ = "JWT",
-    alg = paste0("ES", size)
-  ))
-  doc <- paste(base64url_encode(header), base64url_encode(to_json(payload)), sep = ".")
-  sig <- signature_create(charToRaw(doc), function(x){sha2(x, size = size)}, key = key)
   paste(doc, base64url_encode(sig), sep = ".")
 }
 
@@ -82,6 +52,22 @@ jwt_decode_hmac <- function(jwt, secret){
 
 #' @export
 #' @rdname jwt_encode
+jwt_encode_rsa <- function(payload = list(), key, size = 256) {
+  key <- read_key(key)
+  if(!inherits(key, "rsa") || !inherits(key, "key"))
+    stop("key must be rsa private key")
+  header <- to_json(list(
+    typ = "JWT",
+    alg = paste0("RS", size)
+  ))
+  doc <- paste(base64url_encode(header), base64url_encode(to_json(payload)), sep = ".")
+  dgst <- sha2(charToRaw(doc), size = size)
+  sig <- signature_create(dgst, hash = NULL, key = key)
+  paste(doc, base64url_encode(sig), sep = ".")
+}
+
+#' @export
+#' @rdname jwt_encode
 jwt_decode_rsa <- function(jwt, pubkey){
   out <- jwt_split(jwt)
   if(out$type != "RSA")
@@ -89,10 +75,26 @@ jwt_decode_rsa <- function(jwt, pubkey){
   key <- read_pubkey(pubkey)
   if(!inherits(key, "rsa") || !inherits(key, "pubkey"))
     stop("key must be rsa key")
-  keysize <- out$keysize
-  if(!signature_verify(out$data, out$sig, function(x){sha2(x, size = keysize)}, pubkey = key))
+  dgst <- sha2(out$data, size = out$keysize)
+  if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
     stop("RSA signature verification failed!", call. = FALSE)
   return(out$payload)
+}
+
+#' @export
+#' @rdname jwt_encode
+jwt_encode_ec <- function(payload = list(), key, size = 256) {
+  key <- read_key(key)
+  if(!inherits(key, "ecdsa") || !inherits(key, "key"))
+    stop("key must be ecdsa private key")
+  header <- to_json(list(
+    typ = "JWT",
+    alg = paste0("ES", size)
+  ))
+  doc <- paste(base64url_encode(header), base64url_encode(to_json(payload)), sep = ".")
+  dgst <- sha2(charToRaw(doc), size = size)
+  sig <- signature_create(dgst, hash = NULL, key = key)
+  paste(doc, base64url_encode(sig), sep = ".")
 }
 
 #' @export
@@ -104,8 +106,8 @@ jwt_decode_ec <- function(jwt, pubkey){
   key <- read_pubkey(pubkey)
   if(!inherits(key, "ecdsa") || !inherits(key, "pubkey"))
     stop("key must be ecdsa key")
-  keysize <- out$keysize
-  if(!signature_verify(out$data, out$sig, function(x){sha2(x, size = keysize)}, pubkey = key))
+  dgst <- sha2(out$data, size = out$keysize)
+  if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
     stop("RSA signature verification failed!", call. = FALSE)
   return(out$payload)
 }
