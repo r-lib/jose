@@ -6,7 +6,7 @@
 #' padding.
 #'
 #' @rdname base64url_encode
-#' @importFrom openssl base64_encode
+#' @importFrom openssl base64_encode base64_decode
 #' @export
 base64url_encode <- function(bin){
   text <- base64_encode(bin)
