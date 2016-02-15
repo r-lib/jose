@@ -17,3 +17,6 @@ Imports:
     jsonlite,
     openssl (> 0.9.1)
 RoxygenNote: 5.0.1
+Suggests:
+    testthat
+

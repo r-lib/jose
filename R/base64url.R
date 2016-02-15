@@ -7,6 +7,8 @@
 #'
 #' @rdname base64url_encode
 #' @importFrom openssl base64_encode base64_decode
+#' @param text a base64url encoded string
+#' @param bin a binary blob to encode
 #' @export
 base64url_encode <- function(bin){
   text <- base64_encode(bin)

@@ -1,9 +1,17 @@
 #' JSON Web Token
 #'
-#' Sign or verify a JSON web token.
+#' Sign or verify a JSON web token. The \code{jwt_encode_hmac}, \code{jwt_encode_rsa},
+#' and \code{jwt_encode_ec} default to \code{HS256}, \code{RS256}, and \code{ES256}
+#' respectively.
 #'
 #' @export
 #' @rdname jwt_encode
+#' @param payload a named list with the fields to encode
+#' @param secret string or raw vector with a secret passphrase
+#' @param size bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
+#' @param jwt string containing the JSON Web Token (JWT)
+#' @param key path or object with RSA or EC private key, see \link[openssl:read_key]{openssl::read_key}.
+#' @param pubkey path or object with RSA or EC public key, see \link[openssl:read_pubkey]{openssl::read_pubkey}.
 #' @importFrom openssl sha2 signature_create signature_verify read_pubkey read_key
 #' @importFrom jsonlite fromJSON toJSON
 #' @examples # HMAC signing

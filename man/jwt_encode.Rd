@@ -21,8 +21,23 @@ jwt_encode_ec(payload = list(), key, size = 256)
 
 jwt_decode_ec(jwt, pubkey)
 }
+\arguments{
+\item{payload}{a named list with the fields to encode}
+
+\item{secret}{string or raw vector with a secret passphrase}
+
+\item{size}{bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.}
+
+\item{jwt}{string containing the JSON Web Token (JWT)}
+
+\item{key}{path or object with RSA or EC private key, see \link[openssl:read_key]{openssl::read_key}.}
+
+\item{pubkey}{path or object with RSA or EC public key, see \link[openssl:read_pubkey]{openssl::read_pubkey}.}
+}
 \description{
-Sign or verify a JSON web token.
+Sign or verify a JSON web token. The \code{jwt_encode_hmac}, \code{jwt_encode_rsa},
+and \code{jwt_encode_ec} default to \code{HS256}, \code{RS256}, and \code{ES256}
+respectively.
 }
 \examples{
 # HMAC signing
