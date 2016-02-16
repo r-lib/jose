@@ -8,7 +8,7 @@
 #' @export
 #' @rdname jwt_encode
 #' @aliases jwt jose
-#' @param payload a named list with the fields to encode
+#' @param claim a named list with fields to include in the jwt payload
 #' @param secret string or raw vector with a secret passphrase
 #' @param size bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
 #' @param jwt string containing the JSON Web Token (JWT)
@@ -33,14 +33,14 @@
 #' pubkey <- as.list(mykey)$pubkey
 #' sig <- jwt_encode_ec(token, mykey)
 #' jwt_decode_ec(sig, pubkey)
-jwt_encode_hmac <- function(payload = list(), secret, size = 256) {
+jwt_encode_hmac <- function(claim = claim(), secret, size = 256) {
   if(!is.character(secret) && !is.raw(secret))
     stop("Secret must be a string or raw vector")
   header <- to_json(list(
     typ = "JWT",
     alg = paste0("HS", size)
   ))
-  body <- to_json(payload)
+  body <- to_json(claim)
   doc <- paste(base64url_encode(header), base64url_encode(body), sep = ".")
   sig <- sha2(charToRaw(doc), size = size, key = secret)
   paste(doc, base64url_encode(sig), sep = ".")
@@ -62,7 +62,7 @@ jwt_decode_hmac <- function(jwt, secret){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_rsa <- function(payload = list(), key, size = 256) {
+jwt_encode_rsa <- function(claim = claim(), key, size = 256) {
   key <- read_key(key)
   if(!inherits(key, "rsa") || !inherits(key, "key"))
     stop("key must be rsa private key")
@@ -72,7 +72,7 @@ jwt_encode_rsa <- function(payload = list(), key, size = 256) {
     typ = "JWT",
     alg = paste0("RS", size)
   ))
-  doc <- paste(base64url_encode(header), base64url_encode(to_json(payload)), sep = ".")
+  doc <- paste(base64url_encode(header), base64url_encode(to_json(claim)), sep = ".")
   dgst <- sha2(charToRaw(doc), size = size)
   sig <- signature_create(dgst, hash = NULL, key = key)
   paste(doc, base64url_encode(sig), sep = ".")
@@ -95,7 +95,7 @@ jwt_decode_rsa <- function(jwt, pubkey){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_ec <- function(payload = list(), key) {
+jwt_encode_ec <- function(claim = claim(), key) {
   key <- read_key(key)
   if(!inherits(key, "ecdsa") || !inherits(key, "key"))
     stop("key must be ecdsa private key")
@@ -106,7 +106,7 @@ jwt_encode_ec <- function(payload = list(), key) {
     typ = "JWT",
     alg = paste0("ES", size)
   ))
-  doc <- paste(base64url_encode(header), base64url_encode(to_json(payload)), sep = ".")
+  doc <- paste(base64url_encode(header), base64url_encode(to_json(claim)), sep = ".")
   dgst <- sha2(charToRaw(doc), size = size)
   sig <- signature_create(dgst, hash = NULL, key = key)
   paste(doc, base64url_encode(sig), sep = ".")
@@ -145,4 +145,34 @@ jwt_split <- function(jwt){
 
 to_json <- function(x){
   jsonlite::toJSON(x, auto_unbox = TRUE)
+}
+
+#' Generate claim
+#'
+#' Helper function to create a named list used as the claim of a JWT payload.
+#' See \url{https://tools.ietf.org/html/rfc7519#section-4.1} for details.
+#'
+#' @export
+#' @param iss (Issuer) Claim
+#' @param sub (Subject) Claim
+#' @param aud (Audience) Claim
+#' @param exp (Expiration Time) Claim
+#' @param nbf (Not Before) Claim
+#' @param iat (Issued At) Claim
+#' @param jti (JWT ID) Claim
+#' @param ... additional custom claims to include
+claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
+  iat = unclass(Sys.time()), jti = NULL, ...){
+
+  values <- list(
+    iss = iss,
+    sub = sub,
+    aud = aud,
+    exp = exp,
+    nbf = nbf,
+    iat = iat,
+    jti = jti,
+    ...
+  )
+  Filter(length, values)
 }

@@ -11,20 +11,20 @@
 \alias{jwt_encode_rsa}
 \title{JSON Web Token}
 \usage{
-jwt_encode_hmac(payload = list(), secret, size = 256)
+jwt_encode_hmac(claim = claim(), secret, size = 256)
 
 jwt_decode_hmac(jwt, secret)
 
-jwt_encode_rsa(payload = list(), key, size = 256)
+jwt_encode_rsa(claim = claim(), key, size = 256)
 
 jwt_decode_rsa(jwt, pubkey)
 
-jwt_encode_ec(payload = list(), key)
+jwt_encode_ec(claim = claim(), key)
 
 jwt_decode_ec(jwt, pubkey)
 }
 \arguments{
-\item{payload}{a named list with the fields to encode}
+\item{claim}{a named list with fields to include in the jwt payload}
 
 \item{secret}{string or raw vector with a secret passphrase}
 

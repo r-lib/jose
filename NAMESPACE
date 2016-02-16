@@ -2,6 +2,7 @@
 
 export(base64url_decode)
 export(base64url_encode)
+export(claim)
 export(jwt_decode_ec)
 export(jwt_decode_hmac)
 export(jwt_decode_rsa)
