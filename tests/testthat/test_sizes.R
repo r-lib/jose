@@ -15,6 +15,7 @@ test_that("HMAC sizes", {
   expect_equal(test, jwt_decode_hmac(sig256, secret))
   expect_equal(test, jwt_decode_hmac(sig384, secret))
   expect_equal(test, jwt_decode_hmac(sig512, secret))
+  expect_equal(test, jwt_decode_any(sig, secret = secret))
 })
 
 
@@ -29,6 +30,7 @@ test_that("RSA sizes", {
   expect_equal(test, jwt_decode_rsa(sig256, pubkey))
   expect_equal(test, jwt_decode_rsa(sig384, pubkey))
   expect_equal(test, jwt_decode_rsa(sig512, pubkey))
+  expect_equal(test, jwt_decode_any(sig, pubkey = pubkey))
 })
 
 test_that("EC sizes", {
@@ -46,5 +48,6 @@ test_that("EC sizes", {
   expect_equal(test, jwt_decode_ec(sig256, pubkey256))
   expect_equal(test, jwt_decode_ec(sig384, pubkey384))
   expect_equal(test, jwt_decode_ec(sig512, pubkey521))
+  expect_equal(test, jwt_decode_any(sig, pubkey = pubkey256))
 })
 

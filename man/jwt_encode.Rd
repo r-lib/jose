@@ -3,6 +3,7 @@
 \name{jwt_encode_hmac}
 \alias{jose}
 \alias{jwt}
+\alias{jwt_decode_any}
 \alias{jwt_decode_ec}
 \alias{jwt_decode_hmac}
 \alias{jwt_decode_rsa}
@@ -11,15 +12,17 @@
 \alias{jwt_encode_rsa}
 \title{JSON Web Token}
 \usage{
-jwt_encode_hmac(claim = claim(), secret, size = 256)
+jwt_encode_hmac(claim = new_claim(), secret, size = 256)
 
 jwt_decode_hmac(jwt, secret)
 
-jwt_encode_rsa(claim = claim(), key, size = 256)
+jwt_encode_rsa(claim = new_claim(), key, size = 256)
 
 jwt_decode_rsa(jwt, pubkey)
 
-jwt_encode_ec(claim = claim(), key)
+jwt_decode_any(jwt, secret, pubkey)
+
+jwt_encode_ec(claim = new_claim(), key)
 
 jwt_decode_ec(jwt, pubkey)
 }

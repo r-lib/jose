@@ -1,4 +1,3 @@
-
 #' Generate claim
 #'
 #' Helper function to create a named list used as the claim of a JWT payload.
@@ -13,7 +12,7 @@
 #' @param iat (Issued At) Claim, should be rfc7519 'NumericDate' value
 #' @param jti (JWT ID) Claim, optional unique identifier for the JWT
 #' @param ... additional custom claims to include
-claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
+new_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
                   iat = unclass(Sys.time()), jti = NULL, ...){
 
   values <- list(

@@ -33,7 +33,7 @@
 #' pubkey <- as.list(mykey)$pubkey
 #' sig <- jwt_encode_ec(token, mykey)
 #' jwt_decode_ec(sig, pubkey)
-jwt_encode_hmac <- function(claim = claim(), secret, size = 256) {
+jwt_encode_hmac <- function(claim = new_claim(), secret, size = 256) {
   if(!is.character(secret) && !is.raw(secret))
     stop("Secret must be a string or raw vector")
   header <- to_json(list(
@@ -62,7 +62,7 @@ jwt_decode_hmac <- function(jwt, secret){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_rsa <- function(claim = claim(), key, size = 256) {
+jwt_encode_rsa <- function(claim = new_claim(), key, size = 256) {
   key <- read_key(key)
   if(!inherits(key, "rsa") || !inherits(key, "key"))
     stop("key must be rsa private key")
@@ -95,7 +95,22 @@ jwt_decode_rsa <- function(jwt, pubkey){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_ec <- function(claim = claim(), key) {
+jwt_decode_any <- function(jwt, secret, pubkey){
+  out <- jwt_split(jwt)
+  if(out$type %in% c("RSA", "ECDSA"))
+    pubkey <- read_pubkey(pubkey)
+  switch(out$type,
+    none = out$payload,
+    RSA = jwt_decode_rsa(jwt, pubkey),
+    ECDSA = jwt_decode_ec(jwt, pubkey),
+    HMAC = jwt_decode_hmac(jwt, secret),
+    stop("Invalid type: ", out$type)
+  )
+}
+
+#' @export
+#' @rdname jwt_encode
+jwt_encode_ec <- function(claim = new_claim(), key) {
   key <- read_key(key)
   if(!inherits(key, "ecdsa") || !inherits(key, "key"))
     stop("key must be ecdsa private key")
@@ -129,14 +144,15 @@ jwt_decode_ec <- function(jwt, pubkey){
 
 jwt_split <- function(jwt){
   input <- strsplit(jwt, ".", fixed = TRUE)[[1]]
-  stopifnot(length(input) == 3)
+  stopifnot(length(input) %in% c(2,3))
   header <- jsonlite::fromJSON(rawToChar(base64url_decode(input[1])))
   stopifnot(toupper(header$typ) == "JWT")
+  if(is.na(input[3])) input[3] = ""
   sig <- base64url_decode(input[3])
   header <- fromJSON(rawToChar(base64url_decode(input[1])))
   payload <- fromJSON(rawToChar(base64url_decode(input[2])))
   data <- charToRaw(paste(input[1:2], collapse = "."))
-  if(!grepl("^[HRE]S\\d{3}$", header$alg))
+  if(!grepl("^none|[HRE]S(256|384|512)$", header$alg))
     stop("Invalid algorithm: ", header$alg)
   keysize <- as.numeric(substring(header$alg, 3))
   type <- match.arg(substring(header$alg, 1, 1), c("HMAC", "RSA", "ECDSA"))
