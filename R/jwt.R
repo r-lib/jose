@@ -146,33 +146,3 @@ jwt_split <- function(jwt){
 to_json <- function(x){
   jsonlite::toJSON(x, auto_unbox = TRUE)
 }
-
-#' Generate claim
-#'
-#' Helper function to create a named list used as the claim of a JWT payload.
-#' See \url{https://tools.ietf.org/html/rfc7519#section-4.1} for details.
-#'
-#' @export
-#' @param iss (Issuer) Claim
-#' @param sub (Subject) Claim
-#' @param aud (Audience) Claim
-#' @param exp (Expiration Time) Claim
-#' @param nbf (Not Before) Claim
-#' @param iat (Issued At) Claim
-#' @param jti (JWT ID) Claim
-#' @param ... additional custom claims to include
-claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
-  iat = unclass(Sys.time()), jti = NULL, ...){
-
-  values <- list(
-    iss = iss,
-    sub = sub,
-    aud = aud,
-    exp = exp,
-    nbf = nbf,
-    iat = iat,
-    jti = jti,
-    ...
-  )
-  Filter(length, values)
-}
