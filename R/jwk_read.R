@@ -1,12 +1,13 @@
 #' @rdname jwk
 #' @param file path to file with key data or literal json string
+#' @importFrom jsonlite fromJSON validate
 #' @export
 jwk_read <- function(file){
   jwk <- if(is.character(file)){
-    if(jsonlite::validate(file)){
-      jsonlite::fromJSON(file)
+    if(validate(file)){
+      fromJSON(file)
     } else {
-      jsonlite::fromJSON(read_input(file))
+      fromJSON(openssl:::read_input(file))
     }
   } else {
     file

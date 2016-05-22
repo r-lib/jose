@@ -1,0 +1,23 @@
+language: r
+sudo: false
+cache: packages
+
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+
+r_github_packages:
+  - jimhester/covr
+  - jeroenooms/openssl
+
+warnings_are_errors: true
+#r_check_revdep: true
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+after_success:
+  - Rscript -e 'covr::codecov(type = "all")'
