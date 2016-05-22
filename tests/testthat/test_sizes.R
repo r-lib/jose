@@ -1,4 +1,4 @@
-context("Test hash sizes")
+context("Hash sizes")
 
 test <- list(session = "123456")
 

@@ -1,4 +1,4 @@
-context("Test JWT claims")
+context("Generating JWT claims")
 
 test_that("StringOrURI", {
   expect_is(new_claim(iss = "foo")$iss, "character")

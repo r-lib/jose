@@ -1,4 +1,4 @@
-context("Test JWK keys")
+context("EC signatures and diffie hellman")
 
 test_that("ECDSA works", {
   key <- jwk_read("../keys/ecdsa.json")
