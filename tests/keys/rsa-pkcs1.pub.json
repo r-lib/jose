@@ -1,0 +1,11 @@
+{
+    "alg": "RS256",
+    "e": "AQAB",
+    "ext": true,
+    "key_ops": [
+        "verify"
+    ],
+    "kty": "RSA",
+    "n": "rG2s5sqC_dciWLZMxFrXf-Wy5g8QzxeDa7266zLOujOIydwlsoegXCaTRk7A1nm3qpxkYdpUIO2uAmR4QIIl3E7fLZ6o9HKIJk64JqSOtibG3i1TRtiyS703CKK7rTpvvIx4uBKbl4PITC8u_EdaJMyF4q_kkGTFG7qwQNaHgqwb02A46W3ZbUQbyzLKZe3TpViMm0G8yz5Z2EOY9ijK2nByfaMa0dB53t84KFduYrxqGvuC8BVTUOJ67j-9A9kd2vkgPlyqz5beZP12pUtpDnkw2V9Q_4_fcnHp_qeItpeGTbwcGmeWTdWGGXM0WdyDNjqapEzkPs1vB894Glqsxw"
+}
+

@@ -1,4 +1,11 @@
 //See: https://github.com/diafygi/webcrypto-examples
+function str2buf(str) {
+  var bufView = new Uint8Array(str.length);
+  for (var i=0, strLen=str.length; i<strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return bufView;
+}
 
 var rsasig = window.crypto.subtle.generateKey({
     name: "RSASSA-PKCS1-v1_5",
@@ -23,7 +30,7 @@ rsasig.then(function(key){
     //ECDSA
     var sig = window.crypto.subtle.sign({
         name: "RSASSA-PKCS1-v1_5"
-    }, key.privateKey, new Uint8Array("testje"));
+    }, key.privateKey, new str2buf("testje"));
     sig.then(function(signature){
         var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(signature)));
         console.log("sig: " + base64String);
@@ -53,7 +60,7 @@ rasenc.then(function(key){
     //DH
     window.crypto.subtle.encrypt({
         name: "RSA-OAEP"
-    }, key.publicKey, new Uint8Array("testje")).then(function(bits){
+    }, key.publicKey, str2buf("testje")).then(function(bits){
         var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(bits)));
         console.log("bits: " + base64String);
     });

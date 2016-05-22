@@ -1,4 +1,11 @@
 //See: https://github.com/diafygi/webcrypto-examples
+function str2buf(str) {
+  var bufView = new Uint8Array(str.length);
+  for (var i=0, strLen=str.length; i<strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return bufView;
+}
 
 var ecdsa = window.crypto.subtle.generateKey({
     name: "ECDSA",
@@ -22,12 +29,14 @@ ecdsa.then(function(key){
     var sig = window.crypto.subtle.sign({
         name: "ECDSA",
         hash: {name: "SHA-256"},
-    }, key.privateKey, new Uint8Array("testje"));
+    }, key.privateKey, str2buf("testje"));
     sig.then(function(signature){
         var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(signature)));
         console.log("sig: " + base64String);
     });
 });
+
+// signature_verify(charToRaw("testje"), sig, sha256, pubkey = pubkey)
 
 var ecdh = window.crypto.subtle.generateKey({
     name: "ECDH",
