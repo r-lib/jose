@@ -56,12 +56,12 @@ ecdh.then(function(key){
         console.log(JSON.stringify(str));
     });
 
-    //DH
+    //DH: OpenSSL defaults to max key length of 528 for P-521 keys
     window.crypto.subtle.deriveBits({
         name: "ECDH",
         namedCurve: "P-521",
         public: key.publicKey
-    }, key.privateKey, 256).then(function(bits){
+    }, key.privateKey, 528).then(function(bits){
         var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(bits)));
         console.log("bits: " + base64String);
     });

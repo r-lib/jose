@@ -1,12 +1,1 @@
-{
-    "crv": "P-521",
-    "d": "AI9Pwzww8IpwKJbSS_KTAzhJbw8XLZb9nM5711ylVxik5Vl2-tluctPfm5ZWGrsez12NrfEmzH_EMLgZyBA-lbIi",
-    "ext": true,
-    "key_ops": [
-        "sign"
-    ],
-    "kty": "EC",
-    "x": "AQfhzW1PZgHMkyujhoQxxJj1pk2XOhjVxYJ3Byq_5_S4kKkiITR3CO3DD6wcJWsFFYpq9Xd32x2eqHy6Dz_EvRZI",
-    "y": "AS6ufhWFS49DxeezGYlvIdx5E1IwtDVMTfNSyhxEcsbnUhOIvrexyFiKnXvk_6dFNeHyQIjwki2Nb2jFBNlBArc7"
-}
-
+{"crv":"P-256","d":"gi-2wo0WURZkzCKzkWo3TDINGl3VBVXwMtz9Kj0hMQQ","ext":true,"key_ops":["sign"],"kty":"EC","x":"cy16Sd3QYdzFz8IDxqZmN5l1DVkevDAaYTD5Jko85Dg","y":"SDs8Agj66BNtAmZkFulcrizvcK7IO6CzvgWmOQj5Uxo"}

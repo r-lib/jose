@@ -7,7 +7,7 @@ jwk_read <- function(file){
     if(validate(file)){
       fromJSON(file)
     } else {
-      fromJSON(openssl:::read_input(file))
+      fromJSON(rawToChar(openssl:::read_input(file)))
     }
   } else {
     file
