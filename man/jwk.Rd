@@ -12,6 +12,10 @@ jwk_write(x, path = NULL)
 }
 \arguments{
 \item{file}{path to file with key data or literal json string}
+
+\item{x}{an RSA or EC key or pubkey file}
+
+\item{path}{file path to write output}
 }
 \description{
 Read and write RSA, ECDSA or AES keys as JSON web keys.

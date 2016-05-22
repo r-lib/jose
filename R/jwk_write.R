@@ -5,6 +5,8 @@
 #' @export
 #' @rdname jwk
 #' @name jwk
+#' @param x an RSA or EC key or pubkey file
+#' @param path file path to write output
 #' @examples # generate an ecdsa key
 #' library(openssl)
 #' key <- ec_keygen("P-521")
