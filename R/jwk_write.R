@@ -28,6 +28,10 @@ jwk_export <- function(x, ...){
   UseMethod("jwk_export")
 }
 
+jwk_export.dsa <- function(x, ...){
+  stop("JWK does not support DSA keys. Try RSA or ECDSA instead")
+}
+
 jwk_export.ecdsa <- function(x, ...){
   keydata <- as.list(x)$data
   out <- list (
