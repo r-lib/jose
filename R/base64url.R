@@ -1,8 +1,8 @@
 #' Base64URL encoding
 #'
-#' The \code{base64url_encode} functions are specified in Section 5 of RFC 4648
-#' as a URL-safe alternative to the standard base64. They use different symbols
-#' for the 62:nd and 63:rd alphabet character and don't include trailing \code{==}
+#' The \code{base64url_encode} functions are a variant of the standard base64. They are
+#' specified in Section 5 of RFC 4648 as a URL-safe alternative. They use different symbols
+#' for the 62:nd and 63:rd alphabet character and do not include trailing \code{==}
 #' padding.
 #'
 #' @rdname base64url_encode
