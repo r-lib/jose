@@ -49,8 +49,8 @@ jwk_export.rsa <- function(x, ...){
 }
 
 jwk_export.raw <- function(x, ...){
-  if(is.na(match(length(x), c(16, 24, 32))))
-    stop("AES key must be of length 16, 24, 32.")
+  if(is.na(match(length(x), c(16, 24, 32, 48, 64))))
+    stop("Raw key must length 16, 24, 32 (AES) or 32, 48, 64 (HMAC)")
   to_json(list(
     kty = "oct",
     k = base64url_encode(x)
