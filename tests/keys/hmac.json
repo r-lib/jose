@@ -1,0 +1,1 @@
+{"alg":"HS256","ext":true,"k":"qzM39I7vFUQBjnqyxSOe88ZPEHTVEagw4CLO9DiX0ye4Brlu33uFvwScxyDvhfeIOrCT7LyuhJJMftn6f_kRKw","key_ops":["sign","verify"],"kty":"oct"}
