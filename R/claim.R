@@ -12,7 +12,7 @@
 #' @param iat (Issued At) Claim, should be rfc7519 'NumericDate' value
 #' @param jti (JWT ID) Claim, optional unique identifier for the JWT
 #' @param ... additional custom claims to include
-new_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
+jwt_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
                   iat = unclass(Sys.time()), jti = NULL, ...){
 
   values <- list(

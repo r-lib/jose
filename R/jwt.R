@@ -33,7 +33,7 @@
 #' pubkey <- as.list(mykey)$pubkey
 #' sig <- jwt_encode_ec(token, mykey)
 #' jwt_decode_ec(sig, pubkey)
-jwt_encode_hmac <- function(claim = new_claim(), secret, size = 256) {
+jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256) {
   if(!is.character(secret) && !is.raw(secret))
     stop("Secret must be a string or raw vector")
   header <- to_json(list(
@@ -62,7 +62,7 @@ jwt_decode_hmac <- function(jwt, secret){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_rsa <- function(claim = new_claim(), key, size = 256) {
+jwt_encode_rsa <- function(claim = jwt_claim(), key, size = 256) {
   key <- read_key(key)
   if(!inherits(key, "rsa") || !inherits(key, "key"))
     stop("key must be rsa private key")
@@ -110,7 +110,7 @@ jwt_decode_any <- function(jwt, secret, pubkey){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_ec <- function(claim = new_claim(), key) {
+jwt_encode_ec <- function(claim = jwt_claim(), key) {
   key <- read_key(key)
   if(!inherits(key, "ecdsa") || !inherits(key, "key"))
     stop("key must be ecdsa private key")
