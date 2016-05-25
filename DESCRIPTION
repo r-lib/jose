@@ -15,9 +15,8 @@ URL: https://datatracker.ietf.org/wg/jose/documents/
 BugReports: https://github.com/jeroenooms/jose/issues
 Imports:
     jsonlite,
-    openssl (>= 0.9.3.9000)
+    openssl (>= 0.9.4)
 RoxygenNote: 5.0.1
 Suggests:
-    testthat,
-    httpuv
+    testthat
 
