@@ -34,8 +34,12 @@
 #' sig <- jwt_encode_ec(token, mykey)
 #' jwt_decode_ec(sig, pubkey)
 jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256) {
-  if(!is.character(secret) && !is.raw(secret))
+  if(is.character(secret))
+    secret <- charToRaw(secret)
+  if(!is.raw(secret))
     stop("Secret must be a string or raw vector")
+  if(length(secret) != size/8)
+    warning("Secret length differs from the hash function's block length")
   header <- to_json(list(
     typ = "JWT",
     alg = paste0("HS", size)
@@ -49,8 +53,12 @@ jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256) {
 #' @export
 #' @rdname jwt_encode
 jwt_decode_hmac <- function(jwt, secret){
-  if(!is.character(secret) && !is.raw(secret))
+  if(is.character(secret))
+    secret <- charToRaw(secret)
+  if(!is.raw(secret))
     stop("Secret must be a string or raw vector")
+  if(length(secret) != size/8)
+    warning("Secret length differs from the hash function's block length")
   out <- jwt_split(jwt)
   if(out$type != "HMAC")
     stop("Invalid algorithm: ", out$type)

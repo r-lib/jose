@@ -22,7 +22,7 @@ Javascript Object Signing and Encryption (JOSE) consists of a set of specificati
  - [RFC7518](https://tools.ietf.org/html/rfc7518): JSON Web Algorithms (JWA)
  - [RFC7519](https://tools.ietf.org/html/rfc7519): JSON Web Token (JWT)
  
-The `jose` package implements some of this, in particular `JWK` and `JWK`. See also [https://jwt.io](https://jwt.io) for short introduction.
+The `jose` package implements some of these formats, in particular `JWK` and `JWK`. See also [https://jwt.io](https://jwt.io) for short introduction.
 
 ### JSON Web Tokens (JWT)
 
