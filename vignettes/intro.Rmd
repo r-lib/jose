@@ -1,0 +1,53 @@
+---
+title: "JSON Web Tokens (JWT) and Keys (JWK) in R"
+date: "`r Sys.Date()`"
+output:
+  html_document
+vignette: >
+  %\VignetteIndexEntry{JSON Web Tokens (JWT) and Keys (JWK) in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = "")
+```
+
+Javascript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption, signatures using the popular JSON format. 
+
+ - [RFC7515](https://tools.ietf.org/html/rfc7515): JSON Web Signature (JWS)
+ - [RFC7516](https://tools.ietf.org/html/rfc7516): JSON Web Encryption (JWE)
+ - [RFC7517](https://tools.ietf.org/html/rfc7517): JSON Web Key (JWK)
+ - [RFC7518](https://tools.ietf.org/html/rfc7518): JSON Web Algorithms (JWA)
+ - [RFC7519](https://tools.ietf.org/html/rfc7519): JSON Web Token (JWT)
+ 
+The `jose` package implements some of this, in particular `JWK` and `JWK`. See also [https://jwt.io](https://jwt.io) for short introduction.
+
+### JSON Web Tokens (JWT)
+
+
+
+### JSON Web Keys (JWK)
+
+JOSE also specifies format for exchanging RSA/EC/AES keys in [RFC7517](https://tools.ietf.org/html/rfc7517) in JSON format. The `jose` package seamlessly imports/exports this format for use with the JWT functions above or anything else in the `openssl` package.
+
+
+
+```{r}
+library(openssl)
+library(jose)
+
+# Generate a ECDSA key
+key <- openssl::ec_keygen()
+jsonlite::prettify(write_jwk(key))
+
+# Use public key
+pubkey <- as.list(key)$pubkey
+json <- write_jwk(pubkey)
+jsonlite::prettify(json)
+
+# Read JWK key
+(key2 <- read_jwk(json))
+identical(key, key2)
+```
