@@ -5,6 +5,7 @@
 #' @export
 #' @rdname jwk
 #' @name jwk
+#' @aliases jwk_write
 #' @param x an RSA or EC key or pubkey file
 #' @param path file path to write output
 #' @examples # generate an ecdsa key
@@ -23,6 +24,10 @@ write_jwk <- function(x, path = NULL){
   writeLines(str, path)
   invisible(path)
 }
+
+# Old name
+#' @export
+jwk_write <- write_jwk
 
 jwk_export <- function(x, ...){
   UseMethod("jwk_export")

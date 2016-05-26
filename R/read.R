@@ -1,4 +1,5 @@
 #' @rdname jwk
+#' @aliases jwk_read
 #' @param file path to file with key data or literal json string
 #' @importFrom jsonlite fromJSON validate
 #' @export
@@ -28,6 +29,10 @@ read_jwk <- function(file){
   type <- openssl:::pubkey_type(pubkey)
   structure(key, class = c(class(key), type))
 }
+
+# Former name
+#' @export
+jwk_read <- read_jwk
 
 jwk_parse_ec <- function(input){
   curve <- toupper(input$crv)

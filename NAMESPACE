@@ -2,6 +2,8 @@
 
 export(base64url_decode)
 export(base64url_encode)
+export(jwk_read)
+export(jwk_write)
 export(jwt_claim)
 export(jwt_decode_any)
 export(jwt_decode_ec)

@@ -2,6 +2,8 @@
 % Please edit documentation in R/read.R, R/write.R
 \name{read_jwk}
 \alias{jwk}
+\alias{jwk_read}
+\alias{jwk_write}
 \alias{read_jwk}
 \alias{write_jwk}
 \title{JSON web-keys}
