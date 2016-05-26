@@ -2,7 +2,7 @@
 #' @param file path to file with key data or literal json string
 #' @importFrom jsonlite fromJSON validate
 #' @export
-jwk_read <- function(file){
+read_jwk <- function(file){
   jwk <- if(is.character(file)){
     if(validate(file)){
       fromJSON(file)

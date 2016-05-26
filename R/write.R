@@ -10,14 +10,14 @@
 #' @examples # generate an ecdsa key
 #' library(openssl)
 #' key <- ec_keygen("P-521")
-#' jwk_write(key)
-#' jwk_write(as.list(key)$pubkey)
+#' write_jwk(key)
+#' write_jwk(as.list(key)$pubkey)
 #'
 #' # Same for RSA
 #' key <- rsa_keygen()
-#' jwk_write(key)
-#' jwk_write(as.list(key)$pubkey)
-jwk_write <- function(x, path = NULL){
+#' write_jwk(key)
+#' write_jwk(as.list(key)$pubkey)
+write_jwk <- function(x, path = NULL){
   str <- jwk_export(x)
   if(is.null(path)) return(str)
   writeLines(str, path)
