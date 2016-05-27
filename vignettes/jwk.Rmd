@@ -17,7 +17,9 @@ knitr::opts_chunk$set(comment = "")
 
 ### RSA / ECDSA keys
 
-JOSE also specifies format for exchanging RSA/EC/AES keys in [RFC7517](https://tools.ietf.org/html/rfc7517) in JSON format. The `jose` package seamlessly imports/exports this format for use with the JWT functions above or anything else in the `openssl` package.
+JSON Web Keys (JWK) is a format specified in [RFC7517](https://tools.ietf.org/html/rfc7517) for storing RSA/EC/AES keys in a JSON based format. It can be used to import/export such keys in the brower using the new [W3C WebCryptoAPI](https://www.w3.org/TR/WebCryptoAPI/).
+
+The `jose` package makes it easy to read/write such keys in R for use with JWT or any other functionality from the `openssl` package.
 
 
 ```{r}
