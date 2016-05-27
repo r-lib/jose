@@ -16,5 +16,8 @@ BugReports: https://github.com/jeroenooms/jose/issues
 Depends: openssl (>= 0.9.4)
 Imports: jsonlite
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
 Suggests:
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
