@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(comment = "")
 ```
 
-Javascript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption, signatures using the popular JSON format. 
+Javascript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption and signatures based on the popular JSON format. This is work in progress, the IETF [jose workgroup](https://tools.ietf.org/wg/jose) usually has the latest information. 
 
  - [RFC7515](https://tools.ietf.org/html/rfc7515): JSON Web Signature (JWS)
  - [RFC7516](https://tools.ietf.org/html/rfc7516): JSON Web Encryption (JWE)
@@ -22,7 +22,7 @@ Javascript Object Signing and Encryption (JOSE) consists of a set of specificati
  - [RFC7518](https://tools.ietf.org/html/rfc7518): JSON Web Algorithms (JWA)
  - [RFC7519](https://tools.ietf.org/html/rfc7519): JSON Web Token (JWT)
  
-The `jose` package implements some of these formats, in particular `JWK` and `JWK`. 
+The `jose` package implements some of these specifications, in particular for working with JSON web tokens and keys.
 
 ### JSON Web Tokens (JWT)
 
