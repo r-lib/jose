@@ -48,7 +48,7 @@ respectively. See \href{https://jwt.io}{jwt.io} or
 \examples{
 # HMAC signing
 mysecret <- "This is super secret"
-token <- list(name = "jeroen", session = 123456)
+token <- jwt_claim(name = "jeroen", session = 123456)
 sig <- jwt_encode_hmac(token, mysecret)
 jwt_decode_hmac(sig, mysecret)
 

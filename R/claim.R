@@ -28,6 +28,11 @@ jwt_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL
   structure(Filter(length, values), class = c("jwt_claim", "list"))
 }
 
+#' @export
+print.jwt_claim <- function(x, ...){
+  print(unclass(x))
+}
+
 validate_stringoruri <- function(str){
   if(is.null(str)) return(NULL)
   if(!is.character(str))
