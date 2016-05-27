@@ -1,7 +1,7 @@
 Package: jose
 Type: Package
 Title: Javascript Object Signing and Encryption
-Version: 0.1
+Version: 0.1.9000
 Author: Jeroen Ooms
 Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
 Description: A collection of specifications to securely transfer claims such as
