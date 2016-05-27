@@ -36,8 +36,8 @@ json <- write_jwk(pubkey)
 jsonlite::prettify(json)
 
 # Read JWK key
-(key2 <- read_jwk(json))
-identical(key, key2)
+(out <- read_jwk(json))
+identical(pubkey, out)
 ```
 
 
