@@ -24,7 +24,7 @@ Javascript Object Signing and Encryption (JOSE) consists of a set of specificati
  
 The `jose` package implements some of these specifications, in particular for working with JSON web tokens and keys.
 
-### JSON Web Tokens (JWT)
+### HMAC JSON Web Token
 
 The most common use of JSON Web Tokens is combining a small payload (the 'claim') with a HMAC tag or RSA/ECDSA signature. See also [https://jwt.io](https://jwt.io) for short introduction. 
 
@@ -50,6 +50,8 @@ The decoding errors if the tag verification fails.
 jwt_decode_hmac(jwt, secret = raw())
 ```
 
+### RSA/ECDSA JSON Web Token
+
 Similalry, we can use an RSA or ECDSA key pair we to verify a signature from someone's public key.
 
 ```{r}
@@ -73,6 +75,18 @@ jwt_decode_sig(jwt, pubkey = wrong_key)
 
 
 The spec also describes methods for encypting the payload, but this is currently not widely in use yet.
+
+### Where is the JSON
+
+The jwt payloads consists of a head, body and signature which are separated with a dot into a single string. Both the header and body are actually `base64url` encoded JSON objects.
+
+```{r}
+(strings <- strsplit(jwt, ".", fixed = TRUE)[[1]])
+cat(rawToChar(base64url_decode(strings[1])))
+cat(rawToChar(base64url_decode(strings[2])))
+```
+
+However you should not be using this information without actually verifying the signature. This is what the `jwt_decode` functions do.
 
 ### JSON Web Keys (JWK)
 
