@@ -1,6 +1,6 @@
 context("Hash sizes")
 
-test <- list(session = "123456")
+test <- jwt_claim(session = "123456")
 
 test_that("HMAC sizes", {
   secret <- "This is a secret"

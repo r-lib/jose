@@ -34,12 +34,13 @@
 #' sig <- jwt_encode_ec(token, mykey)
 #' jwt_decode_ec(sig, pubkey)
 jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256) {
+  stopifnot(inherits(claim, "jwt_claim"))
   if(is.character(secret))
     secret <- charToRaw(secret)
   if(!is.raw(secret))
     stop("Secret must be a string or raw vector")
-  if(length(secret) != size/8)
-    warning("Secret length differs from the hash function's block length")
+  if(inherits(secret, "rsa") || inherits(secret, "dsa") || inherits(secret, "ecdsa"))
+    stop("Secret must be raw bytes, not a: ", class(secret)[-1])
   header <- to_json(list(
     typ = "JWT",
     alg = paste0("HS", size)
@@ -57,20 +58,21 @@ jwt_decode_hmac <- function(jwt, secret){
     secret <- charToRaw(secret)
   if(!is.raw(secret))
     stop("Secret must be a string or raw vector")
+  if(inherits(secret, "rsa") || inherits(secret, "dsa") || inherits(secret, "ecdsa"))
+    stop("Secret must be raw bytes, not a: ", class(secret)[-1])
   out <- jwt_split(jwt)
   if(out$type != "HMAC")
     stop("Invalid algorithm: ", out$type)
-  if(length(secret) != out$keysize/8)
-    warning("Secret length differs from the hash function's block length")
   sig <- sha2(out$data, size = out$keysize, key = secret)
   if(!identical(out$sig, unclass(sig)))
     stop("HMAC signature verification failed!", call. = FALSE)
-  return(out$payload)
+  structure(out$payload, class = c("jwt_claim", "list"))
 }
 
 #' @export
 #' @rdname jwt_encode
 jwt_encode_rsa <- function(claim = jwt_claim(), key, size = 256) {
+  stopifnot(inherits(claim, "jwt_claim"))
   key <- read_key(key)
   if(!inherits(key, "rsa") || !inherits(key, "key"))
     stop("key must be rsa private key")
@@ -98,7 +100,7 @@ jwt_decode_rsa <- function(jwt, pubkey){
   dgst <- sha2(out$data, size = out$keysize)
   if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
     stop("RSA signature verification failed!", call. = FALSE)
-  return(out$payload)
+  structure(out$payload, class = c("jwt_claim", "list"))
 }
 
 #' @export
@@ -119,6 +121,7 @@ jwt_decode_any <- function(jwt, secret, pubkey){
 #' @export
 #' @rdname jwt_encode
 jwt_encode_ec <- function(claim = jwt_claim(), key) {
+  stopifnot(inherits(claim, "jwt_claim"))
   key <- read_key(key)
   if(!inherits(key, "ecdsa") || !inherits(key, "key"))
     stop("key must be ecdsa private key")
@@ -147,7 +150,7 @@ jwt_decode_ec <- function(jwt, pubkey){
   dgst <- sha2(out$data, size = out$keysize)
   if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
     stop("RSA signature verification failed!", call. = FALSE)
-  return(out$payload)
+  structure(out$payload, class = c("jwt_claim", "list"))
 }
 
 jwt_split <- function(jwt){

@@ -25,7 +25,7 @@ jwt_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL
     jti = jti,
     ...
   )
-  Filter(length, values)
+  structure(Filter(length, values), class = c("jwt_claim", "list"))
 }
 
 validate_stringoruri <- function(str){
