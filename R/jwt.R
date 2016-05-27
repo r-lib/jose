@@ -11,6 +11,7 @@
 #' @param claim a named list with fields to include in the jwt payload
 #' @param secret string or raw vector with a secret passphrase
 #' @param size bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
+#' Only for HMAC/RSA, not applicable for ECDSA keys.
 #' @param jwt string containing the JSON Web Token (JWT)
 #' @param key path or object with RSA or EC private key, see \link[openssl:read_key]{openssl::read_key}.
 #' @param pubkey path or object with RSA or EC public key, see \link[openssl:read_pubkey]{openssl::read_pubkey}.
@@ -25,14 +26,14 @@
 #' # RSA encoding
 #' mykey <- openssl::rsa_keygen()
 #' pubkey <- as.list(mykey)$pubkey
-#' sig <- jwt_encode_rsa(token, mykey)
-#' jwt_decode_rsa(sig, pubkey)
+#' sig <- jwt_encode_sig(token, mykey)
+#' jwt_decode_sig(sig, pubkey)
 #'
 #' # Same with EC
 #' mykey <- openssl::ec_keygen()
 #' pubkey <- as.list(mykey)$pubkey
-#' sig <- jwt_encode_ec(token, mykey)
-#' jwt_decode_ec(sig, pubkey)
+#' sig <- jwt_encode_sig(token, mykey)
+#' jwt_decode_sig(sig, pubkey)
 jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256) {
   stopifnot(inherits(claim, "jwt_claim"))
   if(is.character(secret))
@@ -71,67 +72,30 @@ jwt_decode_hmac <- function(jwt, secret){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_rsa <- function(claim = jwt_claim(), key, size = 256) {
+jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256) {
   stopifnot(inherits(claim, "jwt_claim"))
   key <- read_key(key)
-  if(!inherits(key, "rsa") || !inherits(key, "key"))
-    stop("key must be rsa private key")
-  if(as.list(key)$size < 2048)
-    stop("RSA keysize must be at least 2048 bit")
-  header <- to_json(list(
-    typ = "JWT",
-    alg = paste0("RS", size)
-  ))
-  doc <- paste(base64url_encode(header), base64url_encode(to_json(claim)), sep = ".")
-  dgst <- sha2(charToRaw(doc), size = size)
-  sig <- signature_create(dgst, hash = NULL, key = key)
-  paste(doc, base64url_encode(sig), sep = ".")
-}
-
-#' @export
-#' @rdname jwt_encode
-jwt_decode_rsa <- function(jwt, pubkey){
-  out <- jwt_split(jwt)
-  if(out$type != "RSA")
-    stop("Invalid algorithm: ", out$type)
-  key <- read_pubkey(pubkey)
-  if(!inherits(key, "rsa") || !inherits(key, "pubkey"))
-    stop("key must be rsa key")
-  dgst <- sha2(out$data, size = out$keysize)
-  if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
-    stop("RSA signature verification failed!", call. = FALSE)
-  structure(out$payload, class = c("jwt_claim", "list"))
-}
-
-#' @export
-#' @rdname jwt_encode
-jwt_decode_any <- function(jwt, secret, pubkey){
-  out <- jwt_split(jwt)
-  if(out$type %in% c("RSA", "ECDSA"))
-    pubkey <- read_pubkey(pubkey)
-  switch(out$type,
-    none = out$payload,
-    RSA = jwt_decode_rsa(jwt, pubkey),
-    ECDSA = jwt_decode_ec(jwt, pubkey),
-    HMAC = jwt_decode_hmac(jwt, secret),
-    stop("Invalid type: ", out$type)
-  )
-}
-
-#' @export
-#' @rdname jwt_encode
-jwt_encode_ec <- function(claim = jwt_claim(), key) {
-  stopifnot(inherits(claim, "jwt_claim"))
-  key <- read_key(key)
-  if(!inherits(key, "ecdsa") || !inherits(key, "key"))
-    stop("key must be ecdsa private key")
+  if(!inherits(key, "key"))
+    stop("key must be rsa/ecdsa private key")
   # See http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3.4
-  size <- switch(as.list(key)$data$curve,
-    "P-256" = 256, "P-384" = 384, "P-521" = 512, stop("invalid curve"))
-  header <- to_json(list(
-    typ = "JWT",
-    alg = paste0("ES", size)
-  ))
+  header <- if(inherits(key, "rsa")){
+    if(as.list(key)$size < 2048)
+      stop("RSA keysize must be at least 2048 bit")
+    to_json(list(
+      typ = "JWT",
+      alg = paste0("RS", size)
+    ))
+  } else if(inherits(key, "ecdsa")){
+    # See http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3.4
+    size <- switch(as.list(key)$data$curve,
+      "P-256" = 256, "P-384" = 384, "P-521" = 512, stop("invalid curve"))
+    to_json(list(
+      typ = "JWT",
+      alg = paste0("ES", size)
+    ))
+  } else {
+    stop("Key must be RSA or ECDSA private key")
+  }
   doc <- paste(base64url_encode(header), base64url_encode(to_json(claim)), sep = ".")
   dgst <- sha2(charToRaw(doc), size = size)
   sig <- signature_create(dgst, hash = NULL, key = key)
@@ -140,16 +104,16 @@ jwt_encode_ec <- function(claim = jwt_claim(), key) {
 
 #' @export
 #' @rdname jwt_encode
-jwt_decode_ec <- function(jwt, pubkey){
+jwt_decode_sig <- function(jwt, pubkey){
   out <- jwt_split(jwt)
-  if(out$type != "ECDSA")
+  if(out$type != "RSA" && out$type != "ECDSA")
     stop("Invalid algorithm: ", out$type)
   key <- read_pubkey(pubkey)
-  if(!inherits(key, "ecdsa") || !inherits(key, "pubkey"))
-    stop("key must be ecdsa key")
+  if((!inherits(key, "rsa") && !inherits(key, "ecdsa")) || !inherits(key, "pubkey"))
+    stop("Key must be rsa/ecdsa public key")
   dgst <- sha2(out$data, size = out$keysize)
   if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
-    stop("RSA signature verification failed!", call. = FALSE)
+    stop(out$type, " signature verification failed!", call. = FALSE)
   structure(out$payload, class = c("jwt_claim", "list"))
 }
 

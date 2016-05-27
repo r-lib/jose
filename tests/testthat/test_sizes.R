@@ -15,22 +15,20 @@ test_that("HMAC sizes", {
   expect_equal(test, jwt_decode_hmac(sig256, secret))
   expect_equal(test, jwt_decode_hmac(sig384, secret))
   expect_equal(test, jwt_decode_hmac(sig512, secret))
-  expect_equal(test, jwt_decode_any(sig, secret = secret))
 })
 
 
 test_that("RSA sizes", {
   key <- openssl::rsa_keygen()
   pubkey <- as.list(key)$pubkey
-  sig <- jwt_encode_rsa(test, key)
-  sig256 <- jwt_encode_rsa(test, key, size = 256)
-  sig384 <- jwt_encode_rsa(test, key, size = 384)
-  sig512 <- jwt_encode_rsa(test, key, size = 512)
-  expect_equal(test, jwt_decode_rsa(sig, pubkey))
-  expect_equal(test, jwt_decode_rsa(sig256, pubkey))
-  expect_equal(test, jwt_decode_rsa(sig384, pubkey))
-  expect_equal(test, jwt_decode_rsa(sig512, pubkey))
-  expect_equal(test, jwt_decode_any(sig, pubkey = pubkey))
+  sig <- jwt_encode_sig(test, key)
+  sig256 <- jwt_encode_sig(test, key, size = 256)
+  sig384 <- jwt_encode_sig(test, key, size = 384)
+  sig512 <- jwt_encode_sig(test, key, size = 512)
+  expect_equal(test, jwt_decode_sig(sig, pubkey))
+  expect_equal(test, jwt_decode_sig(sig256, pubkey))
+  expect_equal(test, jwt_decode_sig(sig384, pubkey))
+  expect_equal(test, jwt_decode_sig(sig512, pubkey))
 })
 
 test_that("EC sizes", {
@@ -40,14 +38,13 @@ test_that("EC sizes", {
   pubkey256 <- as.list(key256)$pubkey
   pubkey384 <- as.list(key384)$pubkey
   pubkey521 <- as.list(key521)$pubkey
-  sig <- jwt_encode_ec(test, key256)
-  sig256 <- jwt_encode_ec(test, key256)
-  sig384 <- jwt_encode_ec(test, key384)
-  sig512 <- jwt_encode_ec(test, key521)
-  expect_equal(test, jwt_decode_ec(sig, pubkey256))
-  expect_equal(test, jwt_decode_ec(sig256, pubkey256))
-  expect_equal(test, jwt_decode_ec(sig384, pubkey384))
-  expect_equal(test, jwt_decode_ec(sig512, pubkey521))
-  expect_equal(test, jwt_decode_any(sig, pubkey = pubkey256))
+  sig <- jwt_encode_sig(test, key256)
+  sig256 <- jwt_encode_sig(test, key256)
+  sig384 <- jwt_encode_sig(test, key384)
+  sig512 <- jwt_encode_sig(test, key521)
+  expect_equal(test, jwt_decode_sig(sig, pubkey256))
+  expect_equal(test, jwt_decode_sig(sig256, pubkey256))
+  expect_equal(test, jwt_decode_sig(sig384, pubkey384))
+  expect_equal(test, jwt_decode_sig(sig512, pubkey521))
 })
 

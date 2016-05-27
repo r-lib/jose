@@ -3,35 +3,27 @@
 \name{jwt_encode_hmac}
 \alias{jose}
 \alias{jwt}
-\alias{jwt_decode_any}
-\alias{jwt_decode_ec}
 \alias{jwt_decode_hmac}
-\alias{jwt_decode_rsa}
-\alias{jwt_encode_ec}
+\alias{jwt_decode_sig}
 \alias{jwt_encode_hmac}
-\alias{jwt_encode_rsa}
+\alias{jwt_encode_sig}
 \title{JSON Web Token}
 \usage{
 jwt_encode_hmac(claim = jwt_claim(), secret, size = 256)
 
 jwt_decode_hmac(jwt, secret)
 
-jwt_encode_rsa(claim = jwt_claim(), key, size = 256)
+jwt_encode_sig(claim = jwt_claim(), key, size = 256)
 
-jwt_decode_rsa(jwt, pubkey)
-
-jwt_decode_any(jwt, secret, pubkey)
-
-jwt_encode_ec(claim = jwt_claim(), key)
-
-jwt_decode_ec(jwt, pubkey)
+jwt_decode_sig(jwt, pubkey)
 }
 \arguments{
 \item{claim}{a named list with fields to include in the jwt payload}
 
 \item{secret}{string or raw vector with a secret passphrase}
 
-\item{size}{bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.}
+\item{size}{bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
+Only for HMAC/RSA, not applicable for ECDSA keys.}
 
 \item{jwt}{string containing the JSON Web Token (JWT)}
 
@@ -55,13 +47,13 @@ jwt_decode_hmac(sig, mysecret)
 # RSA encoding
 mykey <- openssl::rsa_keygen()
 pubkey <- as.list(mykey)$pubkey
-sig <- jwt_encode_rsa(token, mykey)
-jwt_decode_rsa(sig, pubkey)
+sig <- jwt_encode_sig(token, mykey)
+jwt_decode_sig(sig, pubkey)
 
 # Same with EC
 mykey <- openssl::ec_keygen()
 pubkey <- as.list(mykey)$pubkey
-sig <- jwt_encode_ec(token, mykey)
-jwt_decode_ec(sig, pubkey)
+sig <- jwt_encode_sig(token, mykey)
+jwt_decode_sig(sig, pubkey)
 }
 
