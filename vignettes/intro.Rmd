@@ -22,11 +22,57 @@ Javascript Object Signing and Encryption (JOSE) consists of a set of specificati
  - [RFC7518](https://tools.ietf.org/html/rfc7518): JSON Web Algorithms (JWA)
  - [RFC7519](https://tools.ietf.org/html/rfc7519): JSON Web Token (JWT)
  
-The `jose` package implements some of these formats, in particular `JWK` and `JWK`. See also [https://jwt.io](https://jwt.io) for short introduction.
+The `jose` package implements some of these formats, in particular `JWK` and `JWK`. 
 
 ### JSON Web Tokens (JWT)
 
+The most common use of JSON Web Tokens is combining a small payload (the 'claim') with a HMAC tag or RSA/ECDSA signature. See also [https://jwt.io](https://jwt.io) for short introduction. 
 
+```{r}
+library(openssl)
+library(jose)
+
+# Example payload
+claim <- jwt_claim(user = "jeroen", session_key = 123456)
+
+# Encode with hmac
+key <- charToRaw("SuperSecret")
+(jwt <- jwt_encode_hmac(claim, secret = key))
+
+# Decode 
+jwt_decode_hmac(jwt, secret = key)
+```
+
+The decoding errors if the tag verification fails.
+
+```{r error=TRUE}
+# What happens if we decode with the wrong key
+jwt_decode_hmac(jwt, secret = raw())
+```
+
+Similalry, we can use an RSA or ECDSA key pair we to verify a signature from someone's public key.
+
+```{r}
+# Generate ECDSA keypair
+key <- ec_keygen()
+pubkey <- as.list(key)$pubkey
+
+# Sign with the private key
+(jwt <- jwt_encode_sig(claim, key = key))
+
+# Decode and verify using the public key
+jwt_decode_sig(jwt, pubkey = pubkey)
+```
+
+Again decoding will error if the signature verification fails.
+
+```{r error = TRUE}
+wrong_key <- ec_keygen()
+jwt_decode_sig(jwt, pubkey = wrong_key)
+```
+
+
+The spec also describes methods for encypting the payload, but this is currently not widely in use yet.
 
 ### JSON Web Keys (JWK)
 
