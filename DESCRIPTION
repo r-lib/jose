@@ -3,7 +3,7 @@ Type: Package
 Title: Javascript Object Signing and Encryption
 Version: 0.1.9000
 Author: Jeroen Ooms
-Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
+Maintainer: Jeroen Ooms <jeroen@berkeley.edu>
 Description: A collection of specifications to securely transfer claims such as
     authorization information between parties. A JSON Web Token (JWT) contains
     claims used by systems to apply access control rules to its resources. One
@@ -11,8 +11,8 @@ Description: A collection of specifications to securely transfer claims such as
     system that exposes resources through OAuth 2.0.
 License: MIT + file LICENSE
 URL: https://datatracker.ietf.org/wg/jose/documents/
-    https://github.com/jeroenooms/jose
-BugReports: https://github.com/jeroenooms/jose/issues
+    https://github.com/jeroen/jose
+BugReports: https://github.com/jeroen/jose/issues
 Depends: openssl (>= 0.9.4)
 Imports: jsonlite
 RoxygenNote: 5.0.1
