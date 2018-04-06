@@ -12,6 +12,7 @@
 #' @param secret string or raw vector with a secret passphrase
 #' @param size bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
 #' Only for HMAC/RSA, not applicable for ECDSA keys.
+#' @param header a named list with fields to incluce in the jwt header
 #' @param jwt string containing the JSON Web Token (JWT)
 #' @param key path or object with RSA or EC private key, see \link[openssl:read_key]{openssl::read_key}.
 #' @param pubkey path or object with RSA or EC public key, see \link[openssl:read_pubkey]{openssl::read_pubkey}.
@@ -34,7 +35,7 @@
 #' pubkey <- as.list(mykey)$pubkey
 #' sig <- jwt_encode_sig(token, mykey)
 #' jwt_decode_sig(sig, pubkey)
-jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256) {
+jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256, header = NULL) {
   stopifnot(inherits(claim, "jwt_claim"))
   if(is.character(secret))
     secret <- charToRaw(secret)
@@ -42,10 +43,17 @@ jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256) {
     stop("Secret must be a string or raw vector")
   if(inherits(secret, "rsa") || inherits(secret, "dsa") || inherits(secret, "ecdsa"))
     stop("Secret must be raw bytes, not a: ", class(secret)[-1])
-  header <- to_json(list(
-    typ = "JWT",
-    alg = paste0("HS", size)
-  ))
+  header <- if (is.null(header)) {
+    to_json(list(
+      typ = "JWT",
+      alg = paste0("HS", size)
+    ))
+  } else {
+    to_json(c(list(
+      typ = "JWT",
+      alg = paste0("HS", size)
+    ), header))
+  }
   body <- to_json(claim)
   doc <- paste(base64url_encode(header), base64url_encode(body), sep = ".")
   sig <- sha2(charToRaw(doc), size = size, key = secret)
@@ -72,7 +80,7 @@ jwt_decode_hmac <- function(jwt, secret){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256) {
+jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL) {
   stopifnot(inherits(claim, "jwt_claim"))
   key <- read_key(key)
   if(!inherits(key, "key"))
@@ -81,18 +89,32 @@ jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256) {
   header <- if(inherits(key, "rsa")){
     if(as.list(key)$size < 2048)
       stop("RSA keysize must be at least 2048 bit")
-    to_json(list(
-      typ = "JWT",
-      alg = paste0("RS", size)
-    ))
+    if (is.null(header)) {
+      to_json(list(
+        typ = "JWT",
+        alg = paste0("RS", size)
+      ))
+    } else {
+      to_json(c(list(
+        typ = "JWT",
+        alg = paste0("RS", size)
+      ), header))
+    }
   } else if(inherits(key, "ecdsa")){
     # See http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3.4
     size <- switch(as.list(key)$data$curve,
       "P-256" = 256, "P-384" = 384, "P-521" = 512, stop("invalid curve"))
-    to_json(list(
-      typ = "JWT",
-      alg = paste0("ES", size)
-    ))
+    if (is.null(header)) {
+      to_json(list(
+        typ = "JWT",
+        alg = paste0("ES", size)
+      ))
+    } else {
+      to_json(c(list(
+        typ = "JWT",
+        alg = paste0("ES", size)
+      ), header))
+    }
   } else {
     stop("Key must be RSA or ECDSA private key")
   }
