@@ -43,17 +43,10 @@ jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256, header = NU
     stop("Secret must be a string or raw vector")
   if(inherits(secret, "rsa") || inherits(secret, "dsa") || inherits(secret, "ecdsa"))
     stop("Secret must be raw bytes, not a: ", class(secret)[-1])
-  header <- if (is.null(header)) {
-    to_json(list(
-      typ = "JWT",
-      alg = paste0("HS", size)
-    ))
-  } else {
-    to_json(c(list(
+  header <- to_json(c(list(
       typ = "JWT",
       alg = paste0("HS", size)
     ), header))
-  }
   body <- to_json(claim)
   doc <- paste(base64url_encode(header), base64url_encode(body), sep = ".")
   sig <- sha2(charToRaw(doc), size = size, key = secret)
@@ -87,34 +80,20 @@ jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL) 
     stop("key must be rsa/ecdsa private key")
   # See http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3.4
   header <- if(inherits(key, "rsa")){
-    if(as.list(key)$size < 2048)
-      stop("RSA keysize must be at least 2048 bit")
-    if (is.null(header)) {
-      to_json(list(
-        typ = "JWT",
-        alg = paste0("RS", size)
-      ))
-    } else {
-      to_json(c(list(
-        typ = "JWT",
-        alg = paste0("RS", size)
-      ), header))
-    }
+  if(as.list(key)$size < 2048)
+    stop("RSA keysize must be at least 2048 bit")
+    to_json(c(list(
+      typ = "JWT",
+      alg = paste0("RS", size)
+    ), header))
   } else if(inherits(key, "ecdsa")){
     # See http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3.4
     size <- switch(as.list(key)$data$curve,
       "P-256" = 256, "P-384" = 384, "P-521" = 512, stop("invalid curve"))
-    if (is.null(header)) {
-      to_json(list(
-        typ = "JWT",
-        alg = paste0("ES", size)
-      ))
-    } else {
-      to_json(c(list(
-        typ = "JWT",
-        alg = paste0("ES", size)
-      ), header))
-    }
+    to_json(c(list(
+      typ = "JWT",
+      alg = paste0("ES", size)
+    ), header))
   } else {
     stop("Key must be RSA or ECDSA private key")
   }
