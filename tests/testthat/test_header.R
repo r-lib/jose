@@ -9,7 +9,7 @@ test_that("Headers work for hmac", {
 
 test_that("Headers work for sig", {
   mykey <- openssl::rsa_keygen()
-  pubkey <- as.list(mykey)$pubkey
+  pubkey <- mykey$pubkey
   jwt <- jwt_encode_sig(jwt_claim(test = "test"), mykey, test = "test")
   strings <- strsplit(jwt, ".", fixed = TRUE)[[1]]
   expect_true(fromJSON(rawToChar(base64url_decode(strings[1])))$test == "test")
