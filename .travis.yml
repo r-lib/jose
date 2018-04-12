@@ -8,11 +8,21 @@ matrix:
     - os: linux
       env: R_CODECOV=true
     - os: osx
-      brew_packages: openssl
+      before_install:
+        - brew uninstall --ignore-dependencies openssl@1.1
+        - brew install openssl
+        - brew link --force openssl
     - os: osx
-      brew_packages: openssl@1.1
+      before_install:
+        - brew uninstall --ignore-dependencies openssl
+        - brew install openssl@1.1
+        - brew link --force openssl@1.1
     - os: osx
-      brew_packages: libressl
+      before_install:
+        - brew uninstall --ignore-dependencies openssl
+        - brew uninstall --ignore-dependencies openssl@1.1
+        - brew install libressl
+        - brew link --force libressl
 
 addons:
   apt:
