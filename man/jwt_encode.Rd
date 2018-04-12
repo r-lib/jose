@@ -9,11 +9,11 @@
 \alias{jwt_decode_sig}
 \title{JSON Web Token}
 \usage{
-jwt_encode_hmac(claim = jwt_claim(), secret, size = 256, ...)
+jwt_encode_hmac(claim = jwt_claim(), secret, size = 256, header = NULL)
 
 jwt_decode_hmac(jwt, secret)
 
-jwt_encode_sig(claim = jwt_claim(), key, size = 256, ...)
+jwt_encode_sig(claim = jwt_claim(), key, size = 256, header = NULL)
 
 jwt_decode_sig(jwt, pubkey)
 }
@@ -25,8 +25,8 @@ jwt_decode_sig(jwt, pubkey)
 \item{size}{bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
 Only for HMAC/RSA, not applicable for ECDSA keys.}
 
-\item{...}{additional parameter fields to include in the jwt header as defined in
-\href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}}
+\item{header}{named list with additional parameter fields to include in the jwt header as
+defined in \href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}}
 
 \item{jwt}{string containing the JSON Web Token (JWT)}
 
