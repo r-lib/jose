@@ -1,0 +1,3 @@
+0.2
+  - jwt_encode_hmac() and jwt_encode_sig() gain a 'header' parameter
+  - Add spell checker, update maintainer email address
