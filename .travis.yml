@@ -1,6 +1,18 @@
 language: r
-sudo: false
 cache: packages
+latex: false
+fortran: false
+
+matrix:
+  include:
+    - os: linux
+      env: R_CODECOV=true
+    - os: osx
+      brew_packages: openssl@1.1
+    - os: osx
+      brew_packages: openssl
+    - os: osx
+      brew_packages: libressl
 
 addons:
   apt:
@@ -9,7 +21,6 @@ addons:
 
 r_github_packages:
   - jimhester/covr
-  - jeroenooms/openssl
 
 warnings_are_errors: true
 #r_check_revdep: true
