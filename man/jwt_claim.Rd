@@ -28,4 +28,3 @@ jwt_claim(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
 Helper function to create a named list used as the claim of a JWT payload.
 See \url{https://tools.ietf.org/html/rfc7519#section-4.1} for details.
 }
-
