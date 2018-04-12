@@ -1,16 +1,17 @@
 Package: jose
 Type: Package
-Title: Javascript Object Signing and Encryption
-Version: 0.1.9000
+Title: JavaScript Object Signing and Encryption
+Version: 0.2
 Authors@R: person("Jeroen", "Ooms", role = c("aut", "cre"), 
     email = "jeroen@berkeley.edu", comment = c(ORCID = "0000-0002-4035-0289"))
-Description: A collection of specifications to securely transfer claims such as
-    authorization information between parties. A JSON Web Token (JWT) contains
-    claims used by systems to apply access control rules to its resources. One
-    potential use case of the JWT is authentication and authorization for a
-    system that exposes resources through OAuth 2.0.
+Description: Read and write JSON Web Keys (JWK, rfc7517), generate and verify JSON
+    Web Signatures (JWS, rfc7515) and encode/decode JSON Web Tokens (JWT, rfc7519).
+    These standards provide modern signing and encryption formats that are the basis
+    for services like OAuth 2.0 or LetsEncrypt and are natively supported by browsers
+    via the JavaScript WebCryptoAPI.
 License: MIT + file LICENSE
 URL: https://datatracker.ietf.org/wg/jose/documents/
+    https://www.w3.org/TR/WebCryptoAPI/#jose
     https://github.com/jeroen/jose
 BugReports: https://github.com/jeroen/jose/issues
 Depends: openssl (>= 1.0)
@@ -18,7 +19,9 @@ Imports: jsonlite
 RoxygenNote: 6.0.1.9000
 VignetteBuilder: knitr
 Suggests:
+    spelling,
     testthat,
     knitr,
     rmarkdown
 Encoding: UTF-8
+Language: en-US

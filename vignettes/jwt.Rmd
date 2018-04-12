@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(comment = "")
 ```
 
-Javascript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption and signatures based on the popular JSON format. This is work in progress, the IETF [jose workgroup](https://tools.ietf.org/wg/jose) usually has the latest information. 
+JavaScript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption and signatures based on the popular JSON format. This is work in progress, the IETF [jose workgroup](https://tools.ietf.org/wg/jose) usually has the latest information. 
 
  - [RFC7515](https://tools.ietf.org/html/rfc7515): JSON Web Signature (JWS)
  - [RFC7516](https://tools.ietf.org/html/rfc7516): JSON Web Encryption (JWE)
@@ -52,7 +52,7 @@ jwt_decode_hmac(jwt, secret = raw())
 
 ### JSON Web Token: RSA/ECDSA signature
 
-Similalry, we can use an RSA or ECDSA key pair we to verify a signature from someone's public key.
+Similarly, we can use an RSA or ECDSA key pair we to verify a signature from someone's public key.
 
 ```{r}
 # Generate ECDSA keypair
@@ -74,7 +74,7 @@ jwt_decode_sig(jwt, pubkey = wrong_key)
 ```
 
 
-The spec also describes methods for encypting the payload, but this is currently not widely in use yet.
+The spec also describes methods for encrypting the payload, but this is currently not widely in use yet.
 
 ### Where is the JSON
 
