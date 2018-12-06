@@ -14,7 +14,7 @@ URL: https://datatracker.ietf.org/wg/jose/documents/
     https://www.w3.org/TR/WebCryptoAPI/#jose
     https://github.com/jeroen/jose
 BugReports: https://github.com/jeroen/jose/issues
-Depends: openssl (>= 1.0)
+Depends: openssl (>= 1.1.0.9000)
 Imports: jsonlite
 RoxygenNote: 6.0.1.9000
 VignetteBuilder: knitr
@@ -25,3 +25,4 @@ Suggests:
     rmarkdown
 Encoding: UTF-8
 Language: en-US
+Remotes: jeroen/openssl
