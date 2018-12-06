@@ -10,7 +10,10 @@ init:
 install:
   ps: Bootstrap
 
-# Adapt as necessary starting from here
+# To compile dev version of openssl
+environment:
+  global:
+    USE_RTOOLS: true
 
 build_script:
   - travis-tool.sh install_deps
