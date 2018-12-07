@@ -4,8 +4,8 @@
 \alias{jwt_claim}
 \title{Generate claim}
 \usage{
-jwt_claim(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
-  iat = unclass(Sys.time()), jti = NULL, ...)
+jwt_claim(iss = NULL, sub = NULL, aud = NULL, exp = NULL,
+  nbf = NULL, iat = unclass(Sys.time()), jti = NULL, ...)
 }
 \arguments{
 \item{iss}{(Issuer) Claim, should be rfc7519 'StringOrURI' value}

@@ -9,7 +9,8 @@
 \alias{jwt_decode_sig}
 \title{JSON Web Token}
 \usage{
-jwt_encode_hmac(claim = jwt_claim(), secret, size = 256, header = NULL)
+jwt_encode_hmac(claim = jwt_claim(), secret, size = 256,
+  header = NULL)
 
 jwt_decode_hmac(jwt, secret)
 

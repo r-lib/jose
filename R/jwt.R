@@ -103,7 +103,8 @@ jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL) 
   sig <- signature_create(dgst, hash = NULL, key = key)
   if(inherits(key, "ecdsa")){
     params <- openssl::ecdsa_parse(sig)
-    sig <- c(params$r, params$s)
+    bitsize <- ceiling(size / 8)
+    sig <- c(pad_bignum(params$r, size), pad_bignum(params$s, size))
   }
   paste(doc, base64url_encode(sig), sep = ".")
 }
@@ -148,4 +149,12 @@ jwt_split <- function(jwt){
 
 to_json <- function(x){
   jsonlite::toJSON(x, auto_unbox = TRUE)
+}
+
+# Adds leading zeros if needed (P512 is 521 bit == 66 bytes)
+# Spec: https://tools.ietf.org/html/rfc7518#page-10
+pad_bignum <- function(x, keysize){
+  stopifnot(keysize %in% c(256, 384, 512))
+  bitsize <- switch (as.character(keysize), "256" = 32, "384" = 48, "512" = 66)
+  c(raw(bitsize - length(x)), x)
 }
