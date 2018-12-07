@@ -1,4 +1,4 @@
-0.3
+1.0
   - jwt_encode_sig() and jwt_decode_sig() now use proper 64bit signatures
     as described in the spec (instead of openssl DER structures)
 
