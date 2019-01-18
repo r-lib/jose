@@ -5,8 +5,9 @@ fortran: false
 
 matrix:
   include:
+    - dist: xenial
+      r_check_args: '--use-valgrind'
     - os: linux
-      env: R_CODECOV=true
     - os: osx
 
 addons:
@@ -14,16 +15,7 @@ addons:
     packages:
       - libssl-dev
 
-r_github_packages:
-  - jimhester/covr
-
-warnings_are_errors: true
-#r_check_revdep: true
-
 notifications:
   email:
     on_success: change
     on_failure: change
-
-after_success:
-  - Rscript -e 'covr::codecov(type = "all")'
