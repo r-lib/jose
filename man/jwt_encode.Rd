@@ -7,6 +7,7 @@
 \alias{jwt_decode_hmac}
 \alias{jwt_encode_sig}
 \alias{jwt_decode_sig}
+\alias{jwt_split}
 \title{JSON Web Token}
 \usage{
 jwt_encode_hmac(claim = jwt_claim(), secret, size = 256,
@@ -17,6 +18,8 @@ jwt_decode_hmac(jwt, secret)
 jwt_encode_sig(claim = jwt_claim(), key, size = 256, header = NULL)
 
 jwt_decode_sig(jwt, pubkey)
+
+jwt_split(jwt)
 }
 \arguments{
 \item{claim}{a named list with fields to include in the jwt payload}
@@ -59,4 +62,10 @@ mykey <- openssl::ec_keygen()
 pubkey <- as.list(mykey)$pubkey
 sig <- jwt_encode_sig(token, mykey)
 jwt_decode_sig(sig, pubkey)
+
+# Get elements of the key
+mysecret <- "This is super secret"
+token <- jwt_claim(name = "jeroen", session = 123456)
+jwt <- jwt_encode_hmac(token, mysecret)
+jwt_split(jwt)
 }

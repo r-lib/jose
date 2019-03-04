@@ -36,6 +36,12 @@
 #' pubkey <- as.list(mykey)$pubkey
 #' sig <- jwt_encode_sig(token, mykey)
 #' jwt_decode_sig(sig, pubkey)
+#'
+#' # Get elements of the key
+#' mysecret <- "This is super secret"
+#' token <- jwt_claim(name = "jeroen", session = 123456)
+#' jwt <- jwt_encode_hmac(token, mysecret)
+#' jwt_split(jwt)
 jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256, header = NULL) {
   stopifnot(inherits(claim, "jwt_claim"))
   if(is.character(secret))
@@ -130,6 +136,8 @@ jwt_decode_sig <- function(jwt, pubkey){
   structure(out$payload, class = c("jwt_claim", "list"))
 }
 
+#' @export
+#' @rdname jwt_encode
 jwt_split <- function(jwt){
   input <- strsplit(jwt, ".", fixed = TRUE)[[1]]
   stopifnot(length(input) %in% c(2,3))
