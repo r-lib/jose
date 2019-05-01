@@ -5,18 +5,12 @@ fortran: false
 
 matrix:
   include:
+    - dist: precise
+    - dist: trusty
     - dist: xenial
-      r_check_args: '--use-valgrind'
-    - os: linux
     - os: osx
 
 addons:
   apt:
     packages:
       - libssl-dev
-      - valgrind
-
-notifications:
-  email:
-    on_success: change
-    on_failure: change
