@@ -1,3 +1,7 @@
+1.0.1
+  - jwt_encode_* and jwt_decode_* now validate expiration time based on
+    exp parameter, default validity 12 hours 
+
 1.0
   - jwt_encode_sig() and jwt_decode_sig() now use proper 64bit signatures
     as described in the spec (instead of openssl DER structures)

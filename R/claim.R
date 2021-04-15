@@ -13,7 +13,7 @@
 #' @param jti (JWT ID) Claim, optional unique identifier for the JWT
 #' @param ... additional custom claims to include
 jwt_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
-                  iat = unclass(Sys.time()), jti = NULL, ...){
+                  iat = unclass(Sys.time()), jti = NULL, ...) {
 
   values <- list(
     iss = validate_stringoruri(iss),
@@ -29,23 +29,37 @@ jwt_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL
 }
 
 #' @export
-print.jwt_claim <- function(x, ...){
+print.jwt_claim <- function(x, ...) {
   print(unclass(x))
 }
 
-validate_stringoruri <- function(str){
-  if(is.null(str)) return(NULL)
-  if(!is.character(str))
+validate_stringoruri <- function(str) {
+  if (is.null(str)) return(NULL)
+  if (!is.character(str))
     stop("Invalid 'StringOrURI' value: ", str)
-  if(any(grepl(":", str, fixed = TRUE) & !grepl("[a-z]+://", str)))
+  if (any(grepl(":", str, fixed = TRUE) & !grepl("[a-z]+://", str)))
     stop("Invalid 'StringOrURI' value, the ':' may only appear within a URL")
   str
 }
 
-validate_numericdate <- function(val){
-  if(is.null(val)) return(NULL)
+validate_numericdate <- function(val) {
+  if (is.null(val)) return(NULL)
   max <- unclass(as.POSIXct("2200-01-01"))
-  if(!is.numeric(val) || length(val) > 1 || val > max)
+  if (!is.numeric(val) || length(val) > 1 || val > max)
     stop("Invalid 'NumericDate' (seconds since epoch) value: ", val)
   round(val)
+}
+
+validate_exp <- function(val, exp) {
+    val <- validate_numericdate(val)
+    if (is.null(exp)) {
+        warning("Not checking expiration time")
+        return(val)
+    }
+    now <- unclass(Sys.time())
+    if (is.null(val) || val < now)
+        stop("Expiration time exceeded")
+    if (val > ceiling(now + exp))
+        stop("Expiration time invalid")
+    val
 }

@@ -11,7 +11,7 @@
 Read and write JSON Web Keys (JWK, rfc7517), generate and verify JSON
 Web Signatures (JWS, rfc7515) and encode/decode JSON Web Tokens (JWT, rfc7519).
 These standards provide modern signing and encryption formats that are natively
-supported by browsers via the JavaScript WebCryptoAPI, and used by services 
+supported by browsers via the JavaScript WebCryptoAPI, and used by services
 like OAuth 2.0, LetsEncrypt, and Github Apps.
 
 ## Documentation
@@ -52,6 +52,12 @@ token <- jwt_claim(name = "jeroen", session = 123456)
 sig <- jwt_encode_hmac(token, mysecret)
 jwt_decode_hmac(sig, mysecret)
 
+# Starting v1.0.1 expiracy can be set and check
+# e.g. to create and validate 1 minute HMAC tokens
+lifetime <- 60
+sig <- jwt_encode_hmac(token, mysecret, exp = lifetime)
+jwt_decode_hmac(sig, mysecret, exp = lifetime)
+
 # RSA encoding
 mykey <- openssl::rsa_keygen()
 pubkey <- as.list(mykey)$pubkey
@@ -63,4 +69,6 @@ mykey <- openssl::ec_keygen()
 pubkey <- as.list(mykey)$pubkey
 sig <- jwt_encode_sig(token, mykey)
 jwt_decode_sig(sig, pubkey)
+
+
 ```

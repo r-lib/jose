@@ -47,4 +47,3 @@ test_that("EC sizes", {
   expect_equal(test, jwt_decode_sig(sig384, pubkey384))
   expect_equal(test, jwt_decode_sig(sig512, pubkey521))
 })
-

@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(comment = "")
 ```
 
-JavaScript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption and signatures based on the popular JSON format. This is work in progress, the IETF [jose workgroup](https://tools.ietf.org/wg/jose) usually has the latest information. 
+JavaScript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption and signatures based on the popular JSON format. This is work in progress, the IETF [jose workgroup](https://tools.ietf.org/wg/jose) usually has the latest information.
 
  - [RFC7515](https://tools.ietf.org/html/rfc7515): JSON Web Signature (JWS)
  - [RFC7516](https://tools.ietf.org/html/rfc7516): JSON Web Encryption (JWE)
@@ -26,7 +26,7 @@ The `jose` package implements some of these specifications, in particular for wo
 
 ### JSON Web Token: HMAC tagging
 
-The most common use of JSON Web Tokens is combining a small payload (the 'claim') with a HMAC tag or RSA/ECDSA signature. See also [https://jwt.io](https://jwt.io) for short introduction. 
+The most common use of JSON Web Tokens is combining a small payload (the 'claim') with a HMAC tag or RSA/ECDSA signature. See also [https://jwt.io](https://jwt.io) for short introduction.
 
 ```{r}
 library(openssl)
@@ -39,8 +39,8 @@ claim <- jwt_claim(user = "jeroen", session_key = 123456)
 key <- charToRaw("SuperSecret")
 (jwt <- jwt_encode_hmac(claim, secret = key))
 
-# Decode 
-jwt_decode_hmac(jwt, secret = key)
+# Decode
+# jwt_decode_hmac(jwt, secret = key)
 ```
 
 The decoding errors if the tag verification fails.
@@ -49,6 +49,28 @@ The decoding errors if the tag verification fails.
 # What happens if we decode with the wrong key
 jwt_decode_hmac(jwt, secret = raw())
 ```
+
+## Starting v1.0.1 expiration time can be set and check
+
+It can be set at `jwt_encode|decode_*` by passing the argument `exp = <seconds>`. For back compatibilty, parameter is `NULL` by default and raises a warning indicating that expiracy is not checked.
+
+```{r}
+# Create and validate 1 minute HMAC tokens
+lifetime <- 60
+sig <- jwt_encode_hmac(claim, key, exp = lifetime)
+jwt_decode_hmac(sig, key, exp = lifetime)
+```
+
+If expiration is exceeded `error` is thrown.
+
+```{r error=TRUE}
+# Create and validate 1 minute HMAC tokens
+lifetime <- 1
+sig <- jwt_encode_hmac(claim, key, exp = lifetime)
+sleep(2)
+jwt_decode_hmac(sig, key, exp = lifetime)
+```
+
 
 ### JSON Web Token: RSA/ECDSA signature
 
