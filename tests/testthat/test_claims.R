@@ -17,3 +17,24 @@ test_that("NumericDate", {
   expect_error(jwt_claim(exp = "foo"), "Invalid")
   expect_error(jwt_claim(exp = 1e10), "Invalid")
 })
+
+test_that("ValidateExp", {
+  claim <- jwt_claim()
+  val <- jwt_claim()$iat
+  lifetime <- 1
+  future <- ceiling(val + lifetime)
+  far_future <- ceiling(val + lifetime + 5)
+  expect_is(claim$exp, "NULL")
+  expect_warning(validate_exp(NULL, exp = NULL), "Not check")
+  expect_is(suppressWarnings({validate_exp(claim$exp, exp = NULL)}), "NULL")
+  expect_equal(suppressWarnings({validate_exp(future, exp = lifetime)}), future)
+  expect_error(
+      validate_exp(far_future, exp = lifetime),
+      "Expiration time invalid"
+  )
+  Sys.sleep(2)
+  expect_error(
+      validate_exp(future, exp = lifetime),
+      "Expiration time exceeded"
+  )
+})
