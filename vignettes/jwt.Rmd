@@ -28,7 +28,7 @@ The `jose` package implements some of these specifications, in particular for wo
 
 The most common use of JSON Web Tokens is combining a small payload (the 'claim') with a HMAC tag or RSA/ECDSA signature. See also [https://jwt.io](https://jwt.io) for short introduction.
 
-```{r}
+```{r warning=TRUE}
 library(openssl)
 library(jose)
 
@@ -40,7 +40,7 @@ key <- charToRaw("SuperSecret")
 (jwt <- jwt_encode_hmac(claim, secret = key))
 
 # Decode
-# jwt_decode_hmac(jwt, secret = key)
+jwt_decode_hmac(jwt, secret = key)
 ```
 
 The decoding errors if the tag verification fails.
@@ -64,10 +64,10 @@ jwt_decode_hmac(sig, key, exp = lifetime)
 If expiration is exceeded `error` is thrown.
 
 ```{r error=TRUE}
-# Create and validate 1 minute HMAC tokens
+# Create and validate 1 second HMAC tokens
 lifetime <- 1
 sig <- jwt_encode_hmac(claim, key, exp = lifetime)
-sleep(2)
+sleep(2) # Expire token
 jwt_decode_hmac(sig, key, exp = lifetime)
 ```
 
