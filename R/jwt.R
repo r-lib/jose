@@ -11,7 +11,7 @@
 #' @param claim a named list with fields to include in the jwt payload
 #' @param secret string or raw vector with a secret passphrase
 #' @param size bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
-#'  Only for HMAC/RSA, not applicable for ECDSA keys.
+#' Only for HMAC/RSA, not applicable for ECDSA keys.
 #' @param header named list with additional parameter fields to include in the jwt header as
 #' defined in \href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}
 #' @param jwt string containing the JSON Web Token (JWT)

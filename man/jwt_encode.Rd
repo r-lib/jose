@@ -31,26 +31,21 @@ jwt_split(jwt)
 
 \item{secret}{string or raw vector with a secret passphrase}
 
-\item{size}{bitsize of sha2 signature,
-i.e. \code{sha256}, \code{sha384} or \code{sha512}.
+\item{size}{bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
 Only for HMAC/RSA, not applicable for ECDSA keys.}
 
-\item{header}{named list with additional parameter fields
-to include in the jwt header as defined in
-\href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}}
+\item{header}{named list with additional parameter fields to include in the jwt header as
+defined in \href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}}
 
-\item{exp}{integer expiracy time in seconds
-to add or allow for \code{claim$exp}.
+\item{exp}{integer expiracy time in seconds to add or allow for \code{claim$exp}.
 For back-compatibilty, \code{exp = NULL} by default,
 |code{jwt_decode_*} raises a warning indicating that expiracy is not checked.}
 
 \item{jwt}{string containing the JSON Web Token (JWT)}
 
-\item{key}{path or object with RSA or EC private key,
-see \link[openssl:read_key]{openssl::read_key}.}
+\item{key}{path or object with RSA or EC private key, see \link[openssl:read_key]{openssl::read_key}.}
 
-\item{pubkey}{path or object with RSA or EC public key,
-see \link[openssl:read_pubkey]{openssl::read_pubkey}.}
+\item{pubkey}{path or object with RSA or EC public key, see \link[openssl:read_pubkey]{openssl::read_pubkey}.}
 }
 \description{
 Sign or verify a JSON web token. The \code{jwt_encode_hmac}, \code{jwt_encode_rsa},
