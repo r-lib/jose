@@ -69,6 +69,4 @@ mykey <- openssl::ec_keygen()
 pubkey <- as.list(mykey)$pubkey
 sig <- jwt_encode_sig(token, mykey)
 jwt_decode_sig(sig, pubkey)
-
-
 ```

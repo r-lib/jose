@@ -3,9 +3,9 @@ context("Examples from JWT website")
 test_that("HMAC example", {
   buf <- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
   key <- "secret"
-  expect_equal(suppressWarnings({jwt_decode_hmac(buf, key)$sub}), "1234567890")
   expect_warning(jwt_decode_hmac(buf, key), "Not checking")
-  expect_error(jwt_decode_hmac(buf, "bla"), "verif")
+  expect_equal(suppressWarnings({jwt_decode_hmac(buf, key)$sub}), "1234567890")
+  expect_error(jwt_decode_hmac (buf, "bla"), "verif")
 })
 
 
@@ -18,6 +18,7 @@ o2kQ+X5xK9cipRgEKwIDAQAB
 -----END PUBLIC KEY-----"
   sig <- "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.EkN-DOsnsuRjRO6BxXemmJDm3HbxrbRzXglbN2S4sOkopdU4IsDxTI8jO19W_A4K8ZPJijNLis4EZsHeY559a4DFOd50_OqgHGuERTqYZyuhtF39yxJPAjUESwxk2J5k_4zM3O-vtd1Ghyo4IbqKKSy6J9mTniYJPenn5-HIirE"
   pk <- openssl::read_pubkey(pubkeystring)
+  expect_warning(jwt_decode_sig(sig, pk), "Not checking")
   expect_equal(suppressWarnings({jwt_decode_sig(sig, pk)$sub}), "1234567890")
   expect_error(jwt_decode_sig(sig, openssl::rsa_keygen()), "fail")
 })
@@ -56,6 +57,7 @@ q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
 
   sig <- 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.tyh-VfuzIxCyGYDlkBA7DfyjrqmSHu6pQ2hoZuFqUSLPNY2N0mpHb3nk5K17HWP_3cYHBw7AhHale5wky6-sVA'
   pk <- openssl::read_pubkey(pubkeystring)
+  expect_warning(jwt_decode_sig(sig, pk), "Not checking")
   expect_equal(suppressWarnings({jwt_decode_sig(sig, pk)$sub}), "1234567890")
   expect_error(jwt_decode_sig(sig, openssl::ec_keygen()), "fail")
 })

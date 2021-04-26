@@ -39,7 +39,7 @@ claim <- jwt_claim(user = "jeroen", session_key = 123456)
 key <- charToRaw("SuperSecret")
 (jwt <- jwt_encode_hmac(claim, secret = key))
 
-# Decode
+# Decode 
 jwt_decode_hmac(jwt, secret = key)
 ```
 
