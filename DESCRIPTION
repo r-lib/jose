@@ -1,7 +1,7 @@
 Package: jose
 Type: Package
 Title: JavaScript Object Signing and Encryption
-Version: 1.0
+Version: 1.1
 Authors@R: person("Jeroen", "Ooms", role = c("aut", "cre"), 
     email = "jeroen@berkeley.edu", comment = c(ORCID = "0000-0002-4035-0289"))
 Description: Read and write JSON Web Keys (JWK, rfc7517), generate and verify JSON
@@ -16,7 +16,7 @@ URL: https://datatracker.ietf.org/wg/jose/documents/
 BugReports: https://github.com/jeroen/jose/issues
 Depends: openssl (>= 1.2.1)
 Imports: jsonlite
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Suggests:
     spelling,
