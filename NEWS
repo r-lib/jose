@@ -1,7 +1,9 @@
-1.0.1
+1.1.1
   - jwt_encode_*() and jwt_decode_*() now validate expiration time based on
-    exp parameter, default NULL for back compatibilty
-  - jwt_decode_*() now rise warning if exp not specified
+    duration parameter, default NULL for back compatibilty
+
+1.1
+  - Allow for empty list attributes in jwt_claim(), issue #13
 
 1.0
   - jwt_encode_sig() and jwt_decode_sig() now use proper 64bit signatures

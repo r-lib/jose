@@ -10,19 +10,13 @@
 \alias{jwt_split}
 \title{JSON Web Token}
 \usage{
-jwt_encode_hmac(
-  claim = jwt_claim(),
-  secret,
-  size = 256,
-  header = NULL,
-  exp = NULL
-)
+jwt_encode_hmac(claim = jwt_claim(), secret, size = 256, header = NULL, duration = NULL)
 
-jwt_decode_hmac(jwt, secret, exp = NULL)
+jwt_decode_hmac(jwt, secret, duration = NULL)
 
-jwt_encode_sig(claim = jwt_claim(), key, size = 256, header = NULL, exp = NULL)
+jwt_encode_sig(claim = jwt_claim(), key, size = 256, header = NULL, duration = NULL)
 
-jwt_decode_sig(jwt, pubkey, exp = NULL)
+jwt_decode_sig(jwt, pubkey, duration = NULL)
 
 jwt_split(jwt)
 }
@@ -37,9 +31,8 @@ Only for HMAC/RSA, not applicable for ECDSA keys.}
 \item{header}{named list with additional parameter fields to include in the jwt header as
 defined in \href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}}
 
-\item{exp}{integer expiracy time in seconds to add or allow for \code{claim$exp}.
-For back-compatibilty, \code{exp = NULL} by default,
-|code{jwt_decode_*} raises a warning indicating that expiracy is not checked.}
+\item{duration}{integer expiracy time in seconds to add or allow for \code{claim$exp}.
+For back-compatibilty, \code{duration = NULL} by default.}
 
 \item{jwt}{string containing the JSON Web Token (JWT)}
 

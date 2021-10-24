@@ -25,7 +25,7 @@ jwt_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL
     jti = jti,
     ...
   )
-  structure(Filter(length, values), class = c("jwt_claim", "list"))
+  structure(Filter(function(x){is.list(x) || length(x)}, values), class = c("jwt_claim", "list"))
 }
 
 #' @export
