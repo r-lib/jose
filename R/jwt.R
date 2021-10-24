@@ -147,7 +147,7 @@ jwt_decode_sig <- function(jwt, pubkey, duration = NULL) {
   }
   if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
     stop(out$type, " signature verification failed!", call. = FALSE)
-  out$payload$exp <- validate_exp(out$payload$exp, out$payload$iat, duration)
+  out$payload$exp <- validate_duration(out$payload$exp, out$payload$iat, duration)
   structure(out$payload, class = c("jwt_claim", "list"))
 }
 

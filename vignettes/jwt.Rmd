@@ -52,7 +52,7 @@ jwt_decode_hmac(jwt, secret = raw())
 
 ## Starting v1.1.1 expiration time can be set and check
 
-It can be set at `jwt_encode|decode_*` by passing the argument `exp = <seconds>`. For back compatibilty, parameter is `NULL` by default.
+It can be set at `jwt_encode|decode_*` by passing the argument `duration = <seconds>`. For back compatibilty, parameter is `NULL` by default.
 
 ```{r}
 # Create and validate 1 minute HMAC tokens
