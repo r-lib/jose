@@ -4,7 +4,7 @@ test <- jwt_claim(session = "123456")
 
 test_that("HMAC sizes", {
   secret <- "This is a secret"
-  sig <- jwt_encode_hmac(test, secret, exp = 3)
+  sig <- jwt_encode_hmac(test, secret)
   sig256 <- jwt_encode_hmac(test, secret, size = 256)
   sig384 <- jwt_encode_hmac(test, secret, size = 384)
   sig512 <- jwt_encode_hmac(test, secret, size = 512)

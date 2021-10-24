@@ -3,7 +3,7 @@ context("Examples from JWT website")
 test_that("HMAC example", {
   buf <- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
   key <- "secret"
-  expect_equal(jwt_decode_hmac(buf, key)$sub, "1234567890")
+  expect_equal(jwt_decode_hmac (buf, key)$sub, "1234567890")
   expect_error(jwt_decode_hmac (buf, "bla"), "verif")
 })
 
