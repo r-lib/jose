@@ -52,11 +52,11 @@ token <- jwt_claim(name = "jeroen", session = 123456)
 sig <- jwt_encode_hmac(token, mysecret)
 jwt_decode_hmac(sig, mysecret)
 
-# Starting v1.0.1 expiracy can be set and check
+# Starting v1.1.1 expiracy can be set and check
 # e.g. to create and validate 1 minute HMAC tokens
 lifetime <- 60
-sig <- jwt_encode_hmac(token, mysecret, exp = lifetime)
-jwt_decode_hmac(sig, mysecret, exp = lifetime)
+sig <- jwt_encode_hmac(token, mysecret, duration = lifetime)
+jwt_decode_hmac(sig, mysecret, duration = lifetime)
 
 # RSA encoding
 mykey <- openssl::rsa_keygen()
