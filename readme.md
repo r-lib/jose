@@ -11,7 +11,7 @@
 Read and write JSON Web Keys (JWK, rfc7517), generate and verify JSON
 Web Signatures (JWS, rfc7515) and encode/decode JSON Web Tokens (JWT, rfc7519).
 These standards provide modern signing and encryption formats that are natively
-supported by browsers via the JavaScript WebCryptoAPI, and used by services
+supported by browsers via the JavaScript WebCryptoAPI, and used by services 
 like OAuth 2.0, LetsEncrypt, and Github Apps.
 
 ## Documentation

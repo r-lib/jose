@@ -18,23 +18,23 @@ test_that("NumericDate", {
   expect_error(jwt_claim(exp = 1e10), "Invalid")
 })
 
-test_that("ValidateExp", {
+test_that("ValidateDuration", {
   claim <- jwt_claim()
-  val <- jwt_claim()$iat
+  now <- jwt_claim()$iat
   lifetime <- 1
-  future <- ceiling(val + lifetime)
-  far_future <- ceiling(val + lifetime + 5)
+  future <- ceiling(now + lifetime)
+  far_future <- ceiling(future + 5)
   expect_is(claim$exp, "NULL")
-  expect_warning(validate_exp(NULL, exp = NULL), "Not check")
-  expect_is(suppressWarnings({validate_exp(claim$exp, exp = NULL)}), "NULL")
-  expect_equal(suppressWarnings({validate_exp(future, exp = lifetime)}), future)
+  expect_is(validate_duration(claim$exp, now, duration = NULL), "NULL")
+  expect_equal(validate_duration(future, now, duration = NULL), future)
+  expect_equal(validate_duration(future, now, duration = lifetime), future)
   expect_error(
-      validate_exp(far_future, exp = lifetime),
-      "Expiration time invalid"
+      validate_duration(far_future, now, duration = lifetime),
+      "Expiration time over duration limit"
   )
   Sys.sleep(2)
   expect_error(
-      validate_exp(future, exp = lifetime),
+      validate_duration(future, now, duration = lifetime),
       "Expiration time exceeded"
   )
 })

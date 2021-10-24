@@ -50,16 +50,14 @@ validate_numericdate <- function(val){
   round(val)
 }
 
-validate_exp <- function(val, exp) {
-    val <- validate_numericdate(val)
-    if (is.null(exp)) {
-        warning("Not checking expiration time")
+validate_duration <- function(val, iat, duration) {
+    if (is.null(duration) | is.null(val)) {
         return(val)
     }
     now <- unclass(Sys.time())
-    if (is.null(val) || val < now)
+    if (val < now)
         stop("Expiration time exceeded")
-    if (val > ceiling(now + exp))
-        stop("Expiration time invalid")
+    if (val > ceiling(iat + duration))
+        stop("Expiration time over duration limit")
     val
 }

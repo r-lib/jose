@@ -17,9 +17,8 @@
 #' @param jwt string containing the JSON Web Token (JWT)
 #' @param key path or object with RSA or EC private key, see \link[openssl:read_key]{openssl::read_key}.
 #' @param pubkey path or object with RSA or EC public key, see \link[openssl:read_pubkey]{openssl::read_pubkey}.
-#' @param exp integer expiracy time in seconds to add or allow for \code{claim$exp}.
-#' For back-compatibilty, \code{exp = NULL} by default,
-#' |code{jwt_decode_*} raises a warning indicating that expiracy is not checked.
+#' @param duration integer expiracy time in seconds to add or allow for \code{claim$exp}.
+#' For back-compatibilty \code{duration = NULL} by default.
 #'
 #' @importFrom openssl sha2 signature_create signature_verify read_pubkey read_key
 #' @importFrom jsonlite fromJSON toJSON
@@ -46,12 +45,12 @@
 #' token <- jwt_claim(name = "jeroen", session = 123456)
 #' jwt <- jwt_encode_hmac(token, mysecret)
 #' jwt_split(jwt)
-jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256, header = NULL, exp = NULL) {
+jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256, header = NULL, duration = NULL) {
   stopifnot(inherits(claim, "jwt_claim"))
-  if (!is.null(exp)) {
+  if (!is.null(duration)) {
       # Inside if for back compatibilty
-      if (is.null(claim$exp)) claim$exp <- claim$iat + exp
-      claim$exp <- validate_exp(claim$exp, exp)
+      if (is.null(claim$exp)) claim$exp <- claim$iat + duration
+      claim$exp <- validate_duration(claim$exp, claim$iat, duration)
   }
   if(is.character(secret))
     secret <- charToRaw(secret)
@@ -71,7 +70,7 @@ jwt_encode_hmac <- function(claim = jwt_claim(), secret, size = 256, header = NU
 
 #' @export
 #' @rdname jwt_encode
-jwt_decode_hmac <- function(jwt, secret, exp = NULL) {
+jwt_decode_hmac <- function(jwt, secret, duration = NULL) {
   if(is.character(secret))
     secret <- charToRaw(secret)
   if(!is.raw(secret))
@@ -84,18 +83,18 @@ jwt_decode_hmac <- function(jwt, secret, exp = NULL) {
   sig <- sha2(out$data, size = out$keysize, key = secret)
   if(!identical(out$sig, unclass(sig)))
     stop("HMAC signature verification failed!", call. = FALSE)
-  out$payload$exp <- validate_exp(out$payload$exp, exp)
+  out$payload$exp <- validate_duration(out$payload$exp, out$payload$iat, duration)
   structure(out$payload, class = c("jwt_claim", "list"))
 }
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL, exp = NULL) {
+jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL, duration = NULL) {
   stopifnot(inherits(claim, "jwt_claim"))
-  if (!is.null(exp)) {
+  if (!is.null(duration)) {
       # Inside if for back compatibilty
-      if (is.null(claim$exp)) claim$exp <- claim$iat + exp
-      claim$exp <- validate_exp(claim$exp, exp)
+      if (is.null(claim$exp)) claim$exp <- claim$iat + duration
+      claim$exp <- validate_duration(claim$exp, claim$iat, duration)
   }
   key <- read_key(key)
   if(!inherits(key, "key"))
@@ -132,7 +131,7 @@ jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL, 
 
 #' @export
 #' @rdname jwt_encode
-jwt_decode_sig <- function(jwt, pubkey, exp = NULL) {
+jwt_decode_sig <- function(jwt, pubkey, duration = NULL) {
   out <- jwt_split(jwt)
   if(out$type != "RSA" && out$type != "ECDSA")
     stop("Invalid algorithm: ", out$type)
@@ -148,7 +147,7 @@ jwt_decode_sig <- function(jwt, pubkey, exp = NULL) {
   }
   if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
     stop(out$type, " signature verification failed!", call. = FALSE)
-  out$payload$exp <- validate_exp(out$payload$exp, exp)
+  out$payload$exp <- validate_exp(out$payload$exp, out$payload$iat, duration)
   structure(out$payload, class = c("jwt_claim", "list"))
 }
 
