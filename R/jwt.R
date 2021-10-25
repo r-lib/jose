@@ -80,7 +80,7 @@ jwt_decode_hmac <- function(jwt, secret){
 
 #' @export
 #' @rdname jwt_encode
-jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL) {
+jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = list()) {
   stopifnot(inherits(claim, "jwt_claim"))
   key <- read_key(key)
   if(!inherits(key, "key"))
