@@ -19,6 +19,7 @@
 #' @param pubkey path or object with RSA or EC public key, see \link[openssl:read_pubkey]{openssl::read_pubkey}.
 #' @importFrom openssl sha2 signature_create signature_verify read_pubkey read_key
 #' @importFrom jsonlite fromJSON toJSON
+#' @importFrom utils modifyList
 #' @examples # HMAC signing
 #' mysecret <- "This is super secret"
 #' token <- jwt_claim(name = "jeroen", session = 123456)
