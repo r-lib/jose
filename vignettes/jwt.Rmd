@@ -50,7 +50,7 @@ The decoding errors if the tag verification fails.
 jwt_decode_hmac(jwt, secret = raw())
 ```
 
-## Starting v1.1.1 expiration time can be set and check
+## Starting v1.2.1 expiration time can be set and check
 
 It can be set at `jwt_encode|decode_*` by passing the argument `duration = <seconds>`. For back compatibilty, parameter is `NULL` by default.
 
