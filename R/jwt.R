@@ -103,18 +103,18 @@ jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL, 
   jwt_header <- if(inherits(key, "rsa")){
   if(as.list(key)$size < 2048)
     stop("RSA keysize must be at least 2048 bit")
-    to_json(c(list(
+    to_json(utils::modifyList(list(
       typ = "JWT",
       alg = paste0("RS", size)
-    ), header))
+    ), as.list(header)))
   } else if(inherits(key, "ecdsa")){
     # See http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3.4
     size <- switch(as.list(key)$data$curve,
       "P-256" = 256, "P-384" = 384, "P-521" = 512, stop("invalid curve"))
-    to_json(c(list(
+    to_json(utils::modifyList(list(
       typ = "JWT",
       alg = paste0("ES", size)
-    ), header))
+    ), as.list(header)))
   } else {
     stop("Key must be RSA or ECDSA private key")
   }

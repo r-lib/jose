@@ -1,6 +1,9 @@
-1.1.1
+1.2.1
   - jwt_encode_*() and jwt_decode_*() now validate expiration time based on
     duration parameter, default NULL for back compatibilty
+
+1.2
+  - jwt_encode_sig() now allows to override the typ field via headers #15
 
 1.1
   - Allow for empty list attributes in jwt_claim(), issue #13
