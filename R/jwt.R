@@ -154,7 +154,7 @@ jwt_split <- function(jwt){
     stop("Invalid algorithm: ", header$alg)
   keysize <- as.numeric(substring(header$alg, 3))
   type <- match.arg(substring(header$alg, 1, 1), c("HMAC", "RSA", "ECDSA"))
-  list(type = type, keysize = keysize, data = data, sig = sig, payload = payload)
+  list(type = type, keysize = keysize, data = data, sig = sig, payload = payload, header = header)
 }
 
 to_json <- function(x){
