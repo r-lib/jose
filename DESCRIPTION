@@ -16,7 +16,7 @@ URL: https://datatracker.ietf.org/wg/jose/documents/
 BugReports: https://github.com/r-lib/jose/issues
 Depends: openssl (>= 1.2.1)
 Imports: jsonlite
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Suggests:
     spelling,

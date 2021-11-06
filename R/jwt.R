@@ -75,6 +75,7 @@ jwt_decode_hmac <- function(jwt, secret){
   sig <- sha2(out$data, size = out$keysize, key = secret)
   if(!identical(out$sig, unclass(sig)))
     stop("HMAC signature verification failed!", call. = FALSE)
+  check_expiration_time(out$payload)
   structure(out$payload, class = c("jwt_claim", "list"))
 }
 
@@ -133,6 +134,7 @@ jwt_decode_sig <- function(jwt, pubkey){
   }
   if(!signature_verify(dgst, out$sig, hash = NULL, pubkey = key))
     stop(out$type, " signature verification failed!", call. = FALSE)
+  check_expiration_time(out$payload)
   structure(out$payload, class = c("jwt_claim", "list"))
 }
 
@@ -165,4 +167,14 @@ pad_bignum <- function(x, keysize){
   stopifnot(keysize %in% c(256, 384, 512))
   bitsize <- switch (as.character(keysize), "256" = 32, "384" = 48, "512" = 66)
   c(raw(bitsize - length(x)), x)
+}
+
+check_expiration_time <- function(payload){
+  if(length(payload$exp)){
+    stopifnot("exp claim is a number" = is.numeric(payload$exp))
+    expdate <- structure(payload$exp, class = c("POSIXct", "POSIXt"))
+    if(expdate < (Sys.time() - 60)){
+      stop(paste("Token has expired on", expdate), call. = FALSE)
+    }
+  }
 }
