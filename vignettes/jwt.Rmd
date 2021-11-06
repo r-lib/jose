@@ -76,6 +76,38 @@ jwt_decode_sig(jwt, pubkey = wrong_key)
 
 The spec also describes methods for encrypting the payload, but this is currently not widely in use yet.
 
+### Reserved jwt-claim names
+
+You can include custom fields in your jwt payload, but the spec names a few [registered claims](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1) that are reserved for specific uses.
+
+ - `iss` (Issuer): the principal that issued the JWT.
+ - `sub` (Subject): the principal that is the subject of the JWT.
+ - `aud` (Audience): the recipients that the JWT is intended for.
+ - `exp` (Expiration Time): the expiration time on or after which the JWT must not be accepted.
+ - `nbf` (Not Before): the time before which the JWT must not be accepted.
+ - `iat` (Issued At): the time at which the JWT was issued.
+ - `jti` (JWT ID): a unique identifier for the JWT.
+ 
+Each of these are optional, by default only `iat` is set. The `jwt_claim()` function will automatically do basic validation when you set additional fields from this list. For any other fields you can use any value. For example:
+
+```{r}
+# Note that this token expires in 1 hour!
+myclaim <- jwt_claim(
+  iss = "My webapp",
+  exp = Sys.time() + 3600,
+  myfield = "Some application logic",
+  customer = "a cow"
+)
+(jwt <- jwt_encode_sig(myclaim, key = key))
+```
+
+The decode functions will automatically verify that the token has not expired, and error otherwise:
+
+```{r}
+jwt_decode_sig(jwt, pubkey = pubkey)
+```
+
+
 ### Where is the JSON
 
 The jwt payloads consists of a head, body and signature which are separated with a dot into a single string. Both the header and body are actually `base64url` encoded JSON objects.
