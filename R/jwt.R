@@ -168,6 +168,8 @@ pad_bignum <- function(x, keysize){
   c(raw(bitsize - length(x)), x)
 }
 
+# As suggested in the spec, we give a 60s grace period to account
+# for inaccurate clocks.
 check_expiration_time <- function(payload){
   if(length(payload$exp)){
     stopifnot("exp claim is a number" = is.numeric(payload$exp))

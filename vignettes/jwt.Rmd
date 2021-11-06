@@ -101,7 +101,7 @@ myclaim <- jwt_claim(
 (jwt <- jwt_encode_sig(myclaim, key = key))
 ```
 
-The decode functions will automatically verify that the token has not expired, and error otherwise:
+The decode functions will automatically verify that the token has not expired (with a 60s grace period to account for inaccurate clocks), and error otherwise:
 
 ```{r}
 jwt_decode_sig(jwt, pubkey = pubkey)
