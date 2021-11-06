@@ -1,6 +1,7 @@
 1.2
   - jwt_encode_sig() now allows to override the typ field via headers #15
-  - jwt_decode functions now check the 'exp' field and error if token has expired
+  - jwt_decode functions now check the 'exp' and 'nbf' fields and raise
+    and error if token has expired.
 
 1.1
   - Allow for empty list attributes in jwt_claim(), issue #13

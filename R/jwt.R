@@ -178,4 +178,11 @@ check_expiration_time <- function(payload){
       stop(paste("Token has expired on", expdate), call. = FALSE)
     }
   }
+  if(length(payload$nbf)){
+    stopifnot("nbf claim is a number" = is.numeric(payload$nbf))
+    nbfdate <- structure(payload$nbf, class = c("POSIXct", "POSIXt"))
+    if(nbfdate > (Sys.time() + 60)){
+      stop(paste("Token is not valid before", nbfdate), call. = FALSE)
+    }
+  }
 }
