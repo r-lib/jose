@@ -10,7 +10,7 @@ jwt_claim(
   aud = NULL,
   exp = NULL,
   nbf = NULL,
-  iat = unclass(Sys.time()),
+  iat = Sys.time(),
   jti = NULL,
   ...
 )
@@ -22,11 +22,14 @@ jwt_claim(
 
 \item{aud}{(Audience) Claim, should contain one or rfc7519 'StringOrURI' values}
 
-\item{exp}{(Expiration Time) Claim, should be rfc7519 'NumericDate' value}
+\item{exp}{(Expiration Time) Claim, should be rfc7519 'NumericDate' value; R
+\code{POSIXct} values are automatically coerced.}
 
-\item{nbf}{(Not Before) Claim, should be rfc7519 'NumericDate' value}
+\item{nbf}{(Not Before) Claim, should be rfc7519 'NumericDate' value; R
+\code{POSIXct} values are automatically coerced.}
 
-\item{iat}{(Issued At) Claim, should be rfc7519 'NumericDate' value}
+\item{iat}{(Issued At) Claim, should be rfc7519 'NumericDate' value; R
+\code{POSIXct} values are automatically coerced.}
 
 \item{jti}{(JWT ID) Claim, optional unique identifier for the JWT}
 

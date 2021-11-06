@@ -7,14 +7,16 @@
 #' @param iss (Issuer) Claim, should be rfc7519 'StringOrURI' value
 #' @param sub (Subject) Claim, should be rfc7519 'StringOrURI' value
 #' @param aud (Audience) Claim, should contain one or rfc7519 'StringOrURI' values
-#' @param exp (Expiration Time) Claim, should be rfc7519 'NumericDate' value
-#' @param nbf (Not Before) Claim, should be rfc7519 'NumericDate' value
-#' @param iat (Issued At) Claim, should be rfc7519 'NumericDate' value
+#' @param exp (Expiration Time) Claim, should be rfc7519 'NumericDate' value; R
+#' \code{POSIXct} values are automatically coerced.
+#' @param nbf (Not Before) Claim, should be rfc7519 'NumericDate' value; R
+#' \code{POSIXct} values are automatically coerced.
+#' @param iat (Issued At) Claim, should be rfc7519 'NumericDate' value; R
+#' \code{POSIXct} values are automatically coerced.
 #' @param jti (JWT ID) Claim, optional unique identifier for the JWT
 #' @param ... additional custom claims to include
 jwt_claim <- function(iss = NULL, sub = NULL, aud = NULL, exp = NULL, nbf = NULL,
-                  iat = unclass(Sys.time()), jti = NULL, ...){
-
+                  iat = Sys.time(), jti = NULL, ...){
   values <- list(
     iss = validate_stringoruri(iss),
     sub = validate_stringoruri(sub),
@@ -44,6 +46,8 @@ validate_stringoruri <- function(str){
 
 validate_numericdate <- function(val){
   if(is.null(val)) return(NULL)
+  if(inherits(val, 'POSIXt'))
+    val <- unclass(as.POSIXct(val))
   max <- unclass(as.POSIXct("2200-01-01"))
   if(!is.numeric(val) || length(val) > 1 || val > max)
     stop("Invalid 'NumericDate' (seconds since epoch) value: ", val)
