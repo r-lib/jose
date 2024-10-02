@@ -1,7 +1,7 @@
 Package: jose
 Type: Package
 Title: JavaScript Object Signing and Encryption
-Version: 1.2.0
+Version: 1.2.1
 Authors@R: person("Jeroen", "Ooms", role = c("aut", "cre"), 
     email = "jeroenooms@gmail.com", comment = c(ORCID = "0000-0002-4035-0289"))
 Description: Read and write JSON Web Keys (JWK, rfc7517), generate and verify JSON
