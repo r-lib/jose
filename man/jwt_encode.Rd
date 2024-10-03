@@ -29,7 +29,7 @@ jwt_split(jwt)
 Only for HMAC/RSA, not applicable for ECDSA keys.}
 
 \item{header}{named list with additional parameter fields to include in the jwt header as
-defined in \href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}}
+defined in \href{https://datatracker.ietf.org/doc/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}}
 
 \item{jwt}{string containing the JSON Web Token (JWT)}
 
@@ -41,7 +41,7 @@ defined in \href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 sect
 Sign or verify a JSON web token. The \code{jwt_encode_hmac}, \code{jwt_encode_rsa},
 and \code{jwt_encode_ec} default to \code{HS256}, \code{RS256}, and \code{ES256}
 respectively. See \href{https://jwt.io}{jwt.io} or
-\href{https://tools.ietf.org/html/rfc7519}{RFC7519} for more details.
+\href{https://datatracker.ietf.org/doc/html/rfc7519}{RFC7519} for more details.
 }
 \examples{
 # HMAC signing

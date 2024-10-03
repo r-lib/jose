@@ -14,13 +14,13 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(comment = "")
 ```
 
-JavaScript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption and signatures based on the popular JSON format. This is work in progress, the IETF [jose workgroup](https://tools.ietf.org/wg/jose/) usually has the latest information. 
+JavaScript Object Signing and Encryption (JOSE) consists of a set of specifications for encryption and signatures based on the popular JSON format. This is work in progress, the IETF [jose workgroup](https://datatracker.ietf.org/wg/jose/) usually has the latest information. 
 
- - [RFC7515](https://tools.ietf.org/html/rfc7515): JSON Web Signature (JWS)
- - [RFC7516](https://tools.ietf.org/html/rfc7516): JSON Web Encryption (JWE)
- - [RFC7517](https://tools.ietf.org/html/rfc7517): JSON Web Key (JWK)
- - [RFC7518](https://tools.ietf.org/html/rfc7518): JSON Web Algorithms (JWA)
- - [RFC7519](https://tools.ietf.org/html/rfc7519): JSON Web Token (JWT)
+ - [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515): JSON Web Signature (JWS)
+ - [RFC7516](https://datatracker.ietf.org/doc/html/rfc7516): JSON Web Encryption (JWE)
+ - [RFC7517](https://datatracker.ietf.org/doc/html/rfc7517): JSON Web Key (JWK)
+ - [RFC7518](https://datatracker.ietf.org/doc/html/rfc7518): JSON Web Algorithms (JWA)
+ - [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519): JSON Web Token (JWT)
  
 The `jose` package implements some of these specifications, in particular for working with JSON web tokens and keys.
 

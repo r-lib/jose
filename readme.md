@@ -1,8 +1,8 @@
 # jose
 
-[![Build Status](https://travis-ci.org/jeroen/jose.svg?branch=master)](https://travis-ci.org/jeroen/jose)
+[![Build Status](https://app.travis-ci.com/jeroen/jose.svg?branch=master)](https://app.travis-ci.com/jeroen/jose)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jeroen/jose?branch=master&svg=true)](https://ci.appveyor.com/project/jeroen/jose)
-[![Coverage Status](https://codecov.io/github/jeroen/jose/coverage.svg?branch=master)](https://codecov.io/github/jeroen/jose?branch=master)
+[![Coverage Status](https://codecov.io/github/jeroen/jose/coverage.svg?branch=master)](https://app.codecov.io/github/jeroen/jose?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/jose)](http://cran.r-project.org/package=jose)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/jose)](http://cran.r-project.org/web/packages/jose/index.html)
 
