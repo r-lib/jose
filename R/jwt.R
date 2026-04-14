@@ -144,7 +144,9 @@ jwt_split <- function(jwt){
   input <- strsplit(jwt, ".", fixed = TRUE)[[1]]
   stopifnot(length(input) %in% c(2,3))
   header <- fromJSON(rawToChar(base64url_decode(input[1])))
-  stopifnot(toupper(header$typ) == "JWT")
+  if(length(header$typ)){
+    stopifnot(toupper(header$typ) == "JWT")
+  }
   if(is.na(input[3])) input[3] = ""
   sig <- base64url_decode(input[3])
   payload <- fromJSON(rawToChar(base64url_decode(input[2])))
