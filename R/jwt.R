@@ -102,11 +102,20 @@ jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL) 
       typ = "JWT",
       alg = paste0("ES", size)
     ), as.list(header)))
+  } else if(inherits(key, "ed25519")){
+    to_json(utils::modifyList(list(
+      typ = "JWT",
+      alg = "EdDSA"
+    ), as.list(header)))
   } else {
-    stop("Key must be RSA or ECDSA private key")
+    stop("Key must be RSA / ECDSA / ed25519 private key")
   }
   doc <- paste(base64url_encode(jwt_header), base64url_encode(to_json(claim)), sep = ".")
-  dgst <- sha2(charToRaw(doc), size = size)
+  dgst <- if(inherits(key, "ed25519")){
+    charToRaw(doc)
+  } else {
+    sha2(charToRaw(doc), size = size)
+  }
   sig <- signature_create(dgst, hash = NULL, key = key)
   if(inherits(key, "ecdsa")){
     params <- openssl::ecdsa_parse(sig)
@@ -120,12 +129,16 @@ jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL) 
 #' @rdname jwt_encode
 jwt_decode_sig <- function(jwt, pubkey){
   out <- jwt_split(jwt)
-  if(out$type != "RSA" && out$type != "ECDSA")
+  if(!(out$type %in% c("RSA", "ECDSA", "EdDSA")))
     stop("Invalid algorithm: ", out$type)
   key <- read_pubkey(pubkey)
-  if((!inherits(key, "rsa") && !inherits(key, "ecdsa")) || !inherits(key, "pubkey"))
-    stop("Key must be rsa/ecdsa public key")
-  dgst <- sha2(out$data, size = out$keysize)
+  if((!inherits(key, "rsa") && !inherits(key, "ecdsa")) && !inherits(key, "ed25519") || !inherits(key, "pubkey"))
+    stop("Key must be rsa/ecdsa/ed25519 public key")
+  dgst <- if(out$type == "EdDSA"){
+    out$data
+  } else {
+    sha2(out$data, size = out$keysize)
+  }
   if(out$type == "ECDSA"){
     bitsize <- length(out$sig)/2
     r <- out$sig[seq_len(bitsize)]
@@ -151,10 +164,15 @@ jwt_split <- function(jwt){
   sig <- base64url_decode(input[3])
   payload <- fromJSON(rawToChar(base64url_decode(input[2])))
   data <- charToRaw(paste(input[1:2], collapse = "."))
-  if(!grepl("^none|[HRE]S(256|384|512)$", header$alg))
+  if(!grepl("^none|EdDSA|[HRE]S(256|384|512)$", header$alg))
     stop("Invalid algorithm: ", header$alg)
-  keysize <- as.numeric(substring(header$alg, 3))
-  type <- match.arg(substring(header$alg, 1, 1), c("HMAC", "RSA", "ECDSA"))
+  if(grepl('.S\\d\\d\\d', header$alg)){
+    type <- match.arg(substring(header$alg, 1, 1), c("HMAC", "RSA", "ECDSA"))
+    keysize <- as.numeric(substring(header$alg, 3))
+  } else {
+    type <- header$alg
+    keysize = NULL
+  }
   list(type = type, keysize = keysize, data = data, sig = sig, payload = payload, header = header)
 }
 
