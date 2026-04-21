@@ -85,3 +85,14 @@ Al8G7CqwoJOsW7Kddns=
   expect_equal(jwt_decode_sig(sig, pk)$sub, "1234567890")
   expect_error(jwt_decode_sig(sig, openssl::ec_keygen()), "fail")
 })
+
+test_that("ED25519 example", {
+  pubkeystring <- '-----BEGIN PRIVATE KEY-----
+MC4CAQAwBQYDK2VwBCIEIN9TUsdCTBVIQpZUUDt4ow8TCzKiLQSEoZtWnHvaok+B
+-----END PRIVATE KEY-----'
+
+  sig <- 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc3Njg4MDMxMX0.pXG7dV0haEr27iuCqrXTeOQEbaQ8LwlgQ2nBq_ful13hh-D5c27mUkfdiFtlmHMySM6LSqEXd4UpAmDGuCLmBQ'
+  pk <- openssl::read_pubkey(pubkeystring)
+  expect_equal(jwt_decode_sig(sig, pk)$sub, "1234567890")
+  expect_error(jwt_decode_sig(sig, openssl::ed25519_keygen()), "fail")
+})
