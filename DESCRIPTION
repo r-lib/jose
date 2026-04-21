@@ -1,7 +1,7 @@
 Package: jose
 Type: Package
 Title: JavaScript Object Signing and Encryption
-Version: 1.3.0
+Version: 2.0.0
 Authors@R: person("Jeroen", "Ooms", role = c("aut", "cre"), 
     email = "jeroenooms@gmail.com", comment = c(ORCID = "0000-0002-4035-0289"))
 Description: Read and write JSON Web Keys (JWK, rfc7517), generate and verify JSON
@@ -15,7 +15,7 @@ URL: https://r-lib.r-universe.dev/jose
 BugReports: https://github.com/r-lib/jose/issues
 Depends: openssl (>= 1.2.1)
 Imports: jsonlite
-RoxygenNote: 7.1.2
+RoxygenNote: 7.3.3.9000
 VignetteBuilder: knitr
 Suggests:
     spelling,

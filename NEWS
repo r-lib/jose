@@ -1,4 +1,5 @@
-1.3.0
+2.0.0
+  - Add support for ED25519 keys and signatures
   - The 'typ' parameter is no longer required in JWT tokens (#21)
 
 1.2
