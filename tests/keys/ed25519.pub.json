@@ -1,0 +1,12 @@
+{
+  "alg": "EdDSA",
+  "crv": "Ed25519",
+  "ext": true,
+  "key_ops": [
+    "verify"
+  ],
+  "kty": "OKP",
+  "x": "uH-bv_ecumN1fWPbkHw32RKWQ8_82NKEET8-q6W1xwA",
+  "kid": "geQ7dQBGoU7DzNfIVsIwRhOXe8JCZaDc2cHNXPUw+7Y=",
+  "use": "sig"
+}

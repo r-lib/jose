@@ -18,6 +18,7 @@ read_jwk <- function(file){
   key <- switch(tolower(jwk$kty),
     "ec" = jwk_parse_ec(jwk),
     "rsa" = jwk_parse_rsa(jwk),
+    "okp" = return(jwk_parse_ed25519(jwk)),
     "oct" = return(jwk_parse_oct(jwk)), #oct is just bytes
     stop("Unknown key type: ", jwk$kty)
   )
@@ -61,6 +62,17 @@ jwk_parse_rsa <- function(input){
   } else {
     pubkey <- openssl:::rsa_pubkey_build(e, n)
     structure(pubkey, class = "pubkey")
+  }
+}
+
+jwk_parse_ed25519 <- function(input){
+  stopifnot(identical(tolower(input$crv), "ed25519"))
+  if(length(input$d)){
+    d <- base64url_decode(input$d)
+    openssl::read_ed25519_key(d)
+  } else {
+    x <- base64url_decode(input$x)
+    openssl::read_ed25519_pubkey(x)
   }
 }
 
