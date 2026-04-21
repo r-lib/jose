@@ -3,7 +3,7 @@
 #' Sign or verify a JSON web token. The \code{jwt_encode_hmac}, \code{jwt_encode_rsa},
 #' and \code{jwt_encode_ec} default to \code{HS256}, \code{RS256}, and \code{ES256}
 #' respectively. See \href{https://jwt.io}{jwt.io} or
-#' \href{https://tools.ietf.org/html/rfc7519}{RFC7519} for more details.
+#' \href{https://datatracker.ietf.org/doc/html/rfc7519}{RFC7519} for more details.
 #'
 #' @export
 #' @rdname jwt_encode
@@ -13,7 +13,7 @@
 #' @param size bitsize of sha2 signature, i.e. \code{sha256}, \code{sha384} or \code{sha512}.
 #' Only for HMAC/RSA, not applicable for ECDSA keys.
 #' @param header named list with additional parameter fields to include in the jwt header as
-#' defined in \href{https://tools.ietf.org/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}
+#' defined in \href{https://datatracker.ietf.org/doc/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}
 #' @param jwt string containing the JSON Web Token (JWT)
 #' @param key path or object with RSA or EC private key, see \link[openssl:read_key]{openssl::read_key}.
 #' @param pubkey path or object with RSA or EC public key, see \link[openssl:read_pubkey]{openssl::read_pubkey}.
