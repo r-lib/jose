@@ -130,10 +130,15 @@ jwt_encode_sig <- function(claim = jwt_claim(), key, size = 256, header = NULL) 
 jwt_decode_sig <- function(jwt, pubkey){
   out <- jwt_split(jwt)
   if(!(out$type %in% c("RSA", "ECDSA", "EdDSA")))
-    stop("Invalid algorithm: ", out$type)
+    stop("Unsupported algorithm: ", out$type)
   key <- read_pubkey(pubkey)
-  if((!inherits(key, "rsa") && !inherits(key, "ecdsa")) && !inherits(key, "ed25519") || !inherits(key, "pubkey"))
-    stop("Key must be rsa/ecdsa/ed25519 public key")
+  stopifnot(inherits(key, "pubkey"))
+  if(out$type == 'RSA' && !inherits(key, 'rsa'))
+    stop(sprintf("JWT signature is in RSA format but provided pubkey is %s", class(key)[2]))
+  if(out$type == 'ECDSA' && !inherits(key, 'ecdsa'))
+    stop(sprintf("JWT signature is in ECDSA format but provided pubkey is %s", class(key)[2]))
+  if(out$type == 'EdDSA' && !inherits(key, 'ed25519'))
+    stop(sprintf("JWT signature is in EdDSA format but provided pubkey is %s", class(key)[2]))
   dgst <- if(out$type == "EdDSA"){
     out$data
   } else {
