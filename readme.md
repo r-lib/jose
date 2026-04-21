@@ -24,7 +24,7 @@ Vignettes for the R package:
 Specifications and standards:
 
  - JOSE RFC Tracker: https://datatracker.ietf.org/wg/jose/documents/
- - Browser WebCryptoAPI API: https://www.w3.org/TR/WebCryptoAPI/#jose
+ - Browser WebCryptoAPI API: https://www.w3.org/TR/webcrypto/#jose
  - ACME Protocol (LetsEncrypt): https://ietf-wg-acme.github.io/acme/draft-ietf-acme-acme.html
 
 ## JSON Web Keys (JWK)
