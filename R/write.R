@@ -33,10 +33,12 @@ jwk_export <- function(x, ...){
   UseMethod("jwk_export")
 }
 
+#' @export
 jwk_export.dsa <- function(x, ...){
   stop("JWK does not support DSA keys. Try RSA or ECDSA instead")
 }
 
+#' @export
 jwk_export.ecdsa <- function(x, ...){
   keydata <- as.list(x)$data
   out <- list (
@@ -50,6 +52,23 @@ jwk_export.ecdsa <- function(x, ...){
   to_json(out)
 }
 
+#' @export
+jwk_export.ed25519 <- function(x, ...){
+  out <- list(
+    kty = "OKP",
+    alg = "EdDSA",
+    crv = "Ed25519"
+  )
+  if(inherits(x, 'pubkey')){
+    out$x <- base64url_encode(x$data)
+  } else {
+    out$x <- base64url_encode(x$pubkey$data)
+    out$d <- base64url_encode(x$data)
+  }
+  to_json(out)
+}
+
+#' @export
 jwk_export.rsa <- function(x, ...){
   keydata <- as.list(x)$data
   out <- lapply(keydata, base64url_encode)
@@ -57,6 +76,7 @@ jwk_export.rsa <- function(x, ...){
   to_json(out)
 }
 
+#' @export
 jwk_export.raw <- function(x, ...){
   if(is.na(match(length(x), c(16, 24, 32, 48, 64))))
     stop("Raw key must length 16, 24, 32 (AES) or 32, 48, 64 (HMAC)")

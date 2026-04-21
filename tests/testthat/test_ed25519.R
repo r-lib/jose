@@ -8,4 +8,9 @@ test_that("ED25519 works", {
   expect_is(key, "ed25519")
   expect_is(pubkey, "ed25519")
   expect_identical(pubkey, as.list(key)$pubkey)
+
+  # Roundtrip jwk
+  expect_identical(key, read_jwk(write_jwk(key)))
+  expect_identical(pubkey, read_jwk(write_jwk(pubkey)))
+
 })

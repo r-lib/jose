@@ -48,3 +48,10 @@ test_that("EC sizes", {
   expect_equal(test, jwt_decode_sig(sig512, pubkey521))
 })
 
+test_that("ED25519", {
+  edkey <- openssl::ed25519_keygen()
+  pubkey <- as.list(edkey)$pubkey
+  sig <- jwt_encode_sig(test, edkey)
+  expect_equal(test, jwt_decode_sig(sig, pubkey))
+})
+

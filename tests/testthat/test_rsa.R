@@ -12,6 +12,10 @@ test_that("RSA PKCS1 signatures", {
   expect_identical(pubkey, as.list(key)$pubkey)
   expect_true(openssl::signature_verify(data, sig, openssl::sha256, pubkey))
   expect_true(openssl::signature_verify("../keys/data", "../keys/rsa-pkcs1.sig", openssl::sha256, pubkey))
+
+  # Roundtrip jwk
+  expect_identical(key, read_jwk(write_jwk(key)))
+  expect_identical(pubkey, read_jwk(write_jwk(pubkey)))
 })
 
 test_that("RSA OAEP encryption", {
