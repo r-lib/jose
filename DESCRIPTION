@@ -24,3 +24,4 @@ Suggests:
     rmarkdown
 Encoding: UTF-8
 Language: en-US
+Remotes: jeroen/openssl

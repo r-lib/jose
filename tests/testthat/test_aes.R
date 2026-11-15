@@ -16,6 +16,9 @@ test_that("AES algos", {
   aes_gcm_key <- read_jwk("../keys/aes_gcm.json")
   aes_gcm_msg <- readBin("../keys/aes_gcm.bin", raw(), 1000)
 
-  #doesn't work, msg too long? Padding?
-  #expect_identical(aes_gcm_decrypt(aes_gcm_msg, key = aes_gcm_key), secret)
+  # GCM payload includes the authentication tag at the end
+  aes_gcm_msg_body <- head(aes_gcm_msg, -16)
+  aes_gcm_msg_tag <- tail(aes_gcm_msg, 16)
+  expect_identical(openssl::aes_gcm_decrypt(aes_gcm_msg_body, key = aes_gcm_key,
+    iv = raw(16), tag = aes_gcm_msg_tag), secret)
 })
