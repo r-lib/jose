@@ -5,7 +5,8 @@ Version: 2.0.0
 Authors@R: person("Jeroen", "Ooms", role = c("aut", "cre"), 
     email = "jeroenooms@gmail.com", comment = c(ORCID = "0000-0002-4035-0289"))
 Description: Read and write JSON Web Keys (JWK, rfc7517), generate and verify JSON
-    Web Signatures (JWS, rfc7515) and encode/decode JSON Web Tokens (JWT, rfc7519)
+    Web Signatures (JWS, rfc7515), encrypt and decrypt with JSON Web Encryption
+    (JWE, rfc7516) and encode/decode JSON Web Tokens (JWT, rfc7519)
     <https://datatracker.ietf.org/wg/jose/documents/>. These standards provide 
     modern signing and encryption formats that are natively supported by browsers
     via the JavaScript WebCryptoAPI <https://www.w3.org/TR/webcrypto/#jose>, 
@@ -13,7 +14,7 @@ Description: Read and write JSON Web Keys (JWK, rfc7517), generate and verify JS
 License: MIT + file LICENSE
 URL: https://r-lib.r-universe.dev/jose
 BugReports: https://github.com/r-lib/jose/issues
-Depends: openssl (>= 1.2.1)
+Depends: openssl (>= 2.6.0)
 Imports: jsonlite
 RoxygenNote: 7.3.3.9000
 VignetteBuilder: knitr
@@ -24,3 +25,4 @@ Suggests:
     rmarkdown
 Encoding: UTF-8
 Language: en-US
+Remotes: jeroen/openssl
