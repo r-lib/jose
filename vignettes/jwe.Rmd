@@ -1,0 +1,108 @@
+---
+title: "Encrypting data and tokens with JSON Web Encryption (JWE) in R"
+date: "`r Sys.Date()`"
+output:
+  html_document
+vignette: >
+  %\VignetteIndexEntry{Encrypting data and tokens with JSON Web Encryption (JWE) in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = "")
+```
+
+JSON Web Encryption ([RFC7516](https://datatracker.ietf.org/doc/html/rfc7516)) is the encryption counterpart of the JSON Web Signature. A signed token can be read by anyone, the signature only proves that it has not been tampered with. An encrypted token hides the content, so only the recipient with the right key can read it.
+
+### JWE versus JWT encryption
+
+The `jose` package has two pairs of functions for encryption:
+
+ - `jwe_encrypt()` and `jwe_decrypt()` encrypt arbitrary data: a string or raw vector. Decrypting returns a raw vector with the original data.
+ - `jwt_encrypt()` and `jwt_decrypt()` encrypt a JWT claim. This is the same JWE format, but the payload is the JSON claim created with `jwt_claim()`, and the header has `typ` set to `JWT`. The decrypt function parses the claim and checks the `exp` and `nbf` fields, just like `jwt_decode_sig()` does.
+
+So an encrypted JWT is simply a JWE that contains a JWT claim. Use the `jwt_` functions for tokens, and the `jwe_` functions for any other data.
+
+### Encrypting with a public key
+
+Data is encrypted with the public key of the recipient, who then decrypts it using the private key. This works with both RSA and EC keys.
+
+```{r}
+library(openssl)
+library(jose)
+
+# Recipient generates a keypair
+key <- ec_keygen()
+pubkey <- as.list(key)$pubkey
+
+# Encrypt a message for the recipient
+(jwe <- jwe_encrypt("This is a secret message", pubkey))
+
+# The recipient decrypts it with the private key
+rawToChar(jwe_decrypt(jwe, key))
+```
+
+Decryption errors if the key is wrong or if the data was modified.
+
+```{r error=TRUE}
+wrong_key <- ec_keygen()
+jwe_decrypt(jwe, wrong_key)
+```
+
+### Encrypting a JWT
+
+The `jwt_encrypt()` and `jwt_decrypt()` functions do the same for a JWT claim.
+
+```{r}
+claim <- jwt_claim(user = "jeroen", session_key = 123456)
+
+# Encrypt for the recipient
+(jwt <- jwt_encrypt(claim, pubkey))
+
+# Decrypt and get the claim
+jwt_decrypt(jwt, key)
+```
+
+### Encrypting with a shared secret
+
+Instead of a keypair you can also use a shared secret key, which must be a raw vector of 16, 24 or 32 bytes.
+
+```{r}
+secret <- rand_bytes(32)
+jwe <- jwe_encrypt("This is a secret message", secret)
+rawToChar(jwe_decrypt(jwe, secret))
+```
+
+### Algorithms
+
+Each JWE uses two algorithms. The `alg` determines how the random content encryption key is encrypted for the recipient, and `enc` determines how the payload itself is encrypted with that key. By default `alg` is chosen based on your key, and `enc` is `A256GCM`. You can specify other algorithms:
+
+```{r}
+rsa_key <- rsa_keygen()
+jwe <- jwe_encrypt("Hello", as.list(rsa_key)$pubkey, alg = "RSA-OAEP", enc = "A128CBC-HS256")
+rawToChar(jwe_decrypt(jwe, rsa_key))
+```
+
+See `?jwe` for all supported algorithms. The header shows which algorithms were used:
+
+```{r}
+strings <- strsplit(jwe, ".", fixed = TRUE)[[1]]
+cat(rawToChar(base64url_decode(strings[1])))
+```
+
+### Signing and encrypting
+
+Encryption hides the content of a token, but it does not prove who created it, because anyone with the public key of the recipient can create a valid JWE. If you need both, you can first sign the JWT with your own key, and then encrypt the signed token for the recipient. The `cty` header indicates that the content is a JWT.
+
+```{r}
+# Sender signs with own key, then encrypts for the recipient
+sender_key <- ec_keygen()
+signed <- jwt_encode_sig(claim, key = sender_key)
+jwe <- jwe_encrypt(signed, pubkey, header = list(cty = "JWT"))
+
+# Recipient decrypts, then verifies the signature of the sender
+signed <- rawToChar(jwe_decrypt(jwe, key))
+jwt_decode_sig(signed, pubkey = as.list(sender_key)$pubkey)
+```

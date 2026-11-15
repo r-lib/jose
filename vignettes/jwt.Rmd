@@ -74,7 +74,7 @@ jwt_decode_sig(jwt, pubkey = wrong_key)
 ```
 
 
-The spec also describes methods for encrypting the payload, but this is currently not widely in use yet.
+The spec also describes methods for encrypting the payload, see the JWE vignette.
 
 ### Reserved jwt-claim names
 
