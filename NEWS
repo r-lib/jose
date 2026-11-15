@@ -1,3 +1,8 @@
+2.1.0
+  - Add support for JSON Web Encryption (JWE) via new functions jwe_encrypt(),
+    jwe_decrypt(), jwt_encrypt() and jwt_decrypt()
+  - Add a vignette on JWE encryption
+
 2.0.0
   - Add support for ED25519 keys and signatures
   - The 'typ' parameter is no longer required in JWT tokens (#21)
