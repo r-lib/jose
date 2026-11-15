@@ -278,12 +278,11 @@ jwe_header_bytes <- function(x){
 
 jwe_epk <- function(pubkey){
   data <- as.list(pubkey)$data
-  size <- switch(data$curve, "P-256" = 256, "P-384" = 384, "P-521" = 512, stop("Unsupported curve: ", data$curve))
   list(
     kty = "EC",
     crv = data$curve,
-    x = base64url_encode(pad_bignum(data$x, size)),
-    y = base64url_encode(pad_bignum(data$y, size))
+    x = base64url_encode(data$x),
+    y = base64url_encode(data$y)
   )
 }
 
