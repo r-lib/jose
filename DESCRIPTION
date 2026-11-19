@@ -16,7 +16,6 @@ URL: https://r-lib.r-universe.dev/jose
 BugReports: https://github.com/r-lib/jose/issues
 Depends: openssl (>= 2.6.0)
 Imports: jsonlite
-RoxygenNote: 7.3.3.9000
 VignetteBuilder: knitr
 Suggests:
     spelling,
@@ -25,3 +24,4 @@ Suggests:
     rmarkdown
 Encoding: UTF-8
 Language: en-US
+Config/roxygen2/version: 8.0.0

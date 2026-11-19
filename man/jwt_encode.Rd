@@ -29,7 +29,7 @@ jwt_split(jwt)
 Only for HMAC/RSA, not applicable for ECDSA keys.}
 
 \item{header}{named list with additional parameter fields to include in the jwt header as
-defined in \href{https://datatracker.ietf.org/doc/html/rfc7515}{rfc7515 section 9.1.2}}
+defined in \href{https://datatracker.ietf.org/doc/html/rfc7515#section-9.1.2}{rfc7515 section 9.1.2}}
 
 \item{jwt}{string containing the JSON Web Token (JWT)}
 
